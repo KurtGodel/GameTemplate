@@ -1,0 +1,372 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		28BE435C1B067D09001D5E57 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28BE435B1B067D09001D5E57 /* ResourcePath.mm */; };
+		28BE435F1B067D09001D5E57 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE435E1B067D09001D5E57 /* main.cpp */; };
+		28BE43621B067D09001D5E57 /* cute_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43611B067D09001D5E57 /* cute_image.jpg */; };
+		28BE43641B067D09001D5E57 /* nice_music.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43631B067D09001D5E57 /* nice_music.ogg */; };
+		28BE43661B067D09001D5E57 /* sansation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43651B067D09001D5E57 /* sansation.ttf */; };
+		28BE43681B067D09001D5E57 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43671B067D09001D5E57 /* icon.png */; };
+		28BE437D1B067D3D001D5E57 /* TextBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE436F1B067D3D001D5E57 /* TextBox.cpp */; };
+		28BE437E1B067D3D001D5E57 /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43711B067D3D001D5E57 /* Server.cpp */; };
+		28BE437F1B067D3D001D5E57 /* Overview.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43721B067D3D001D5E57 /* Overview.png */; };
+		28BE43801B067D3D001D5E57 /* Overview.delineato in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43731B067D3D001D5E57 /* Overview.delineato */; };
+		28BE43811B067D3D001D5E57 /* MenuButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43751B067D3D001D5E57 /* MenuButton.cpp */; };
+		28BE43821B067D3D001D5E57 /* MainMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43771B067D3D001D5E57 /* MainMenu.cpp */; };
+		28BE43831B067D3D001D5E57 /* ClientBaseClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43791B067D3D001D5E57 /* ClientBaseClass.cpp */; };
+		28BE43841B067D3D001D5E57 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE437B1B067D3D001D5E57 /* Client.cpp */; };
+		28BE43851B067D3D001D5E57 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE437C1B067D3D001D5E57 /* button.png */; };
+		28BE43881B067D71001D5E57 /* MenuPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43861B067D71001D5E57 /* MenuPage.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		28BE43561B067D09001D5E57 /* GameTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28BE435A1B067D09001D5E57 /* GameTemplate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameTemplate-Info.plist"; sourceTree = "<group>"; };
+		28BE435B1B067D09001D5E57 /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
+		28BE435D1B067D09001D5E57 /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
+		28BE435E1B067D09001D5E57 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		28BE43611B067D09001D5E57 /* cute_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cute_image.jpg; sourceTree = "<group>"; };
+		28BE43631B067D09001D5E57 /* nice_music.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = nice_music.ogg; sourceTree = "<group>"; };
+		28BE43651B067D09001D5E57 /* sansation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sansation.ttf; sourceTree = "<group>"; };
+		28BE43671B067D09001D5E57 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		28BE436E1B067D3D001D5E57 /* TextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextBox.h; sourceTree = "<group>"; };
+		28BE436F1B067D3D001D5E57 /* TextBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextBox.cpp; sourceTree = "<group>"; };
+		28BE43701B067D3D001D5E57 /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
+		28BE43711B067D3D001D5E57 /* Server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Server.cpp; sourceTree = "<group>"; };
+		28BE43721B067D3D001D5E57 /* Overview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Overview.png; sourceTree = "<group>"; };
+		28BE43731B067D3D001D5E57 /* Overview.delineato */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = Overview.delineato; sourceTree = "<group>"; };
+		28BE43741B067D3D001D5E57 /* MenuButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuButton.h; sourceTree = "<group>"; };
+		28BE43751B067D3D001D5E57 /* MenuButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuButton.cpp; sourceTree = "<group>"; };
+		28BE43761B067D3D001D5E57 /* MainMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenu.h; sourceTree = "<group>"; };
+		28BE43771B067D3D001D5E57 /* MainMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainMenu.cpp; sourceTree = "<group>"; };
+		28BE43781B067D3D001D5E57 /* ClientBaseClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientBaseClass.h; sourceTree = "<group>"; };
+		28BE43791B067D3D001D5E57 /* ClientBaseClass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientBaseClass.cpp; sourceTree = "<group>"; };
+		28BE437A1B067D3D001D5E57 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		28BE437B1B067D3D001D5E57 /* Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Client.cpp; sourceTree = "<group>"; };
+		28BE437C1B067D3D001D5E57 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
+		28BE43861B067D71001D5E57 /* MenuPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuPage.cpp; sourceTree = "<group>"; };
+		28BE43871B067D71001D5E57 /* MenuPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuPage.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		28BE43521B067D09001D5E57 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		28BE434C1B067D09001D5E57 = {
+			isa = PBXGroup;
+			children = (
+				28BE43581B067D09001D5E57 /* GameTemplate */,
+				28BE43571B067D09001D5E57 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		28BE43571B067D09001D5E57 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				28BE43561B067D09001D5E57 /* GameTemplate.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		28BE43581B067D09001D5E57 /* GameTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				28BE435B1B067D09001D5E57 /* ResourcePath.mm */,
+				28BE43861B067D71001D5E57 /* MenuPage.cpp */,
+				28BE43871B067D71001D5E57 /* MenuPage.h */,
+				28BE435D1B067D09001D5E57 /* ResourcePath.hpp */,
+				28BE435E1B067D09001D5E57 /* main.cpp */,
+				28BE436E1B067D3D001D5E57 /* TextBox.h */,
+				28BE436F1B067D3D001D5E57 /* TextBox.cpp */,
+				28BE43701B067D3D001D5E57 /* Server.h */,
+				28BE43711B067D3D001D5E57 /* Server.cpp */,
+				28BE43721B067D3D001D5E57 /* Overview.png */,
+				28BE43731B067D3D001D5E57 /* Overview.delineato */,
+				28BE43741B067D3D001D5E57 /* MenuButton.h */,
+				28BE43751B067D3D001D5E57 /* MenuButton.cpp */,
+				28BE43761B067D3D001D5E57 /* MainMenu.h */,
+				28BE43771B067D3D001D5E57 /* MainMenu.cpp */,
+				28BE43781B067D3D001D5E57 /* ClientBaseClass.h */,
+				28BE43791B067D3D001D5E57 /* ClientBaseClass.cpp */,
+				28BE437A1B067D3D001D5E57 /* Client.h */,
+				28BE437B1B067D3D001D5E57 /* Client.cpp */,
+				28BE437C1B067D3D001D5E57 /* button.png */,
+				28BE43601B067D09001D5E57 /* Resources */,
+				28BE43591B067D09001D5E57 /* Supporting Files */,
+			);
+			path = GameTemplate;
+			sourceTree = "<group>";
+		};
+		28BE43591B067D09001D5E57 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				28BE435A1B067D09001D5E57 /* GameTemplate-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		28BE43601B067D09001D5E57 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				28BE43611B067D09001D5E57 /* cute_image.jpg */,
+				28BE43631B067D09001D5E57 /* nice_music.ogg */,
+				28BE43651B067D09001D5E57 /* sansation.ttf */,
+				28BE43671B067D09001D5E57 /* icon.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		28BE43551B067D09001D5E57 /* GameTemplate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 28BE436B1B067D09001D5E57 /* Build configuration list for PBXNativeTarget "GameTemplate" */;
+			buildPhases = (
+				28BE43511B067D09001D5E57 /* Sources */,
+				28BE43521B067D09001D5E57 /* Frameworks */,
+				28BE43531B067D09001D5E57 /* Resources */,
+				28BE43541B067D09001D5E57 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GameTemplate;
+			productName = GameTemplate;
+			productReference = 28BE43561B067D09001D5E57 /* GameTemplate.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		28BE434D1B067D09001D5E57 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "Thomas Redding";
+				TargetAttributes = {
+					28BE43551B067D09001D5E57 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 28BE43501B067D09001D5E57 /* Build configuration list for PBXProject "GameTemplate" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 28BE434C1B067D09001D5E57;
+			productRefGroup = 28BE43571B067D09001D5E57 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				28BE43551B067D09001D5E57 /* GameTemplate */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		28BE43531B067D09001D5E57 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28BE43851B067D3D001D5E57 /* button.png in Resources */,
+				28BE43801B067D3D001D5E57 /* Overview.delineato in Resources */,
+				28BE43681B067D09001D5E57 /* icon.png in Resources */,
+				28BE43661B067D09001D5E57 /* sansation.ttf in Resources */,
+				28BE43641B067D09001D5E57 /* nice_music.ogg in Resources */,
+				28BE43621B067D09001D5E57 /* cute_image.jpg in Resources */,
+				28BE437F1B067D3D001D5E57 /* Overview.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		28BE43541B067D09001D5E57 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This shell script simply copies required SFML dylibs/frameworks into the application bundle frameworks folder.\n# If you're using static libraries (which is not recommended) you should remove this script from your project.\n\n# Are we building a project that uses frameworks or dylibs?\ncase \"$SFML_BINARY_TYPE\" in\n    DYLIBS)\n        frameworks=\"false\"\n        ;;\n    *)\n        frameworks=\"true\"\n        ;;\nesac\n\n# Echoes to stderr\nerror () # $* message to display\n{\n    echo $* 1>&2\n    exit 2\n}\n\nassert () # $1 is a boolean, $2...N is an error message\n{\n    if [ $# -lt 2 ]\n    then\n        error \"Internal error in assert : not enough args\"\n    fi\n\n    if [ $1 -ne 0 ]\n    then\n        shift\n        error \"$*\"\n    fi\n}\n\nforce_remove () # $@ is some paths\n{\n    test $# -ge 1\n    assert $? \"force_remove() requires at least one parameter\"\n    rm -fr $@\n    assert $? \"couldn't remove $@\"\n}\n\ncopy () # $1 is a source, $2 is a destination\n{\n    test $# -eq 2\n    assert $? \"copy() requires two parameters\"\n    ditto \"$1\" \"$2\"\n    assert $? \"couldn't copy $1 to $2\"\n}\n\nrequire () # $1 is a SFML module like 'system' or 'audio'\n{\n    dest=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app/Contents/Frameworks\"\n\n    if [ -z \"$1\" ]\n    then\n        error \"require() requires one parameter!\"\n    else\n        # clean potentially old stuff\n        force_remove \"$dest/libsfml-$1\"*\n        force_remove \"$dest/sfml-$1.framework\"\n\n        # copy SFML libraries\n        if [ \"$frameworks\" = \"true\" ]\n        then\n            source=\"/Library/Frameworks/sfml-$1.framework\"\n            target=\"sfml-$1.framework\"\n        elif [ \"$SFML_LINK_DYLIBS_SUFFIX\" = \"-d\" ]\n        then\n            source=\"/usr/local/lib/libsfml-$1-d.dylib\"\n            target=\"`readlink $source`\"\n        else\n            source=\"/usr/local/lib/libsfml-$1.dylib\"\n            target=\"`readlink $source`\"\n        fi\n\n        copy \"$source\" \"$dest/$target\"\n\n        # copy extra dependencies\n        if [ \"$1\" = \"audio\" ]\n        then\n            # copy sndfile framework too\n            copy \"/Library/Frameworks/sndfile.framework\" \"$dest/sndfile.framework\"\n        elif [ \"$1\" = \"graphics\" ]\n        then\n            # copy freetype framework too\n            copy \"/Library/Frameworks/freetype.framework\" \"$dest/freetype.framework\"\n        fi\n    fi\n}\n\nif [ -n \"$SFML_SYSTEM\" ]\nthen\n    require \"system\"\nfi\n\nif [ -n \"$SFML_AUDIO\" ]\nthen\n    require \"audio\"\nfi\n\nif [ -n \"$SFML_NETWORK\" ]\nthen\n    require \"network\"\nfi\n\nif [ -n \"$SFML_WINDOW\" ]\nthen\n    require \"window\"\nfi\n\nif [ -n \"$SFML_GRAPHICS\" ]\nthen\n    require \"graphics\"\nfi\n\n                ";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		28BE43511B067D09001D5E57 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28BE43831B067D3D001D5E57 /* ClientBaseClass.cpp in Sources */,
+				28BE435F1B067D09001D5E57 /* main.cpp in Sources */,
+				28BE43841B067D3D001D5E57 /* Client.cpp in Sources */,
+				28BE43821B067D3D001D5E57 /* MainMenu.cpp in Sources */,
+				28BE43881B067D71001D5E57 /* MenuPage.cpp in Sources */,
+				28BE43811B067D3D001D5E57 /* MenuButton.cpp in Sources */,
+				28BE437D1B067D3D001D5E57 /* TextBox.cpp in Sources */,
+				28BE437E1B067D3D001D5E57 /* Server.cpp in Sources */,
+				28BE435C1B067D09001D5E57 /* ResourcePath.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		28BE43691B067D09001D5E57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					x86_64,
+				);
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"$(inherited)",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"$(SFML_SYSTEM)",
+					"$(SFML_WINDOW)",
+					"$(SFML_GRAPHICS)",
+					"$(SFML_AUDIO)",
+					"$(SFML_NETWORK)",
+				);
+				SFML_AUDIO = "$(SFML_LINK_PREFIX) sfml-audio$(SFML_LINK_SUFFIX)";
+				SFML_BINARY_TYPE = FRAMEWORKS;
+				SFML_GRAPHICS = "$(SFML_LINK_PREFIX) sfml-graphics$(SFML_LINK_SUFFIX)";
+				SFML_LINK_DYLIBS_PREFIX = "-l";
+				SFML_LINK_DYLIBS_SUFFIX = "";
+				SFML_LINK_FRAMEWORKS_PREFIX = "-framework";
+				SFML_LINK_FRAMEWORKS_SUFFIX = "";
+				SFML_LINK_PREFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_PREFIX)";
+				SFML_LINK_SUFFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_SUFFIX)";
+				SFML_NETWORK = "$(SFML_LINK_PREFIX) sfml-network$(SFML_LINK_SUFFIX)";
+				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
+				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Debug;
+		};
+		28BE436A1B067D09001D5E57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					x86_64,
+				);
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks/,
+					"$(inherited)",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include/,
+					"$(inherited)",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"$(SFML_SYSTEM)",
+					"$(SFML_WINDOW)",
+					"$(SFML_GRAPHICS)",
+					"$(SFML_AUDIO)",
+					"$(SFML_NETWORK)",
+				);
+				SFML_AUDIO = "$(SFML_LINK_PREFIX) sfml-audio$(SFML_LINK_SUFFIX)";
+				SFML_BINARY_TYPE = FRAMEWORKS;
+				SFML_GRAPHICS = "$(SFML_LINK_PREFIX) sfml-graphics$(SFML_LINK_SUFFIX)";
+				SFML_LINK_DYLIBS_PREFIX = "-l";
+				SFML_LINK_DYLIBS_SUFFIX = "";
+				SFML_LINK_FRAMEWORKS_PREFIX = "-framework";
+				SFML_LINK_FRAMEWORKS_SUFFIX = "";
+				SFML_LINK_PREFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_PREFIX)";
+				SFML_LINK_SUFFIX = "$(SFML_LINK_$(SFML_BINARY_TYPE)_SUFFIX)";
+				SFML_NETWORK = "$(SFML_LINK_PREFIX) sfml-network$(SFML_LINK_SUFFIX)";
+				SFML_SYSTEM = "$(SFML_LINK_PREFIX) sfml-system$(SFML_LINK_SUFFIX)";
+				SFML_WINDOW = "$(SFML_LINK_PREFIX) sfml-window$(SFML_LINK_SUFFIX)";
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Release;
+		};
+		28BE436C1B067D09001D5E57 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "GameTemplate/GameTemplate-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		28BE436D1B067D09001D5E57 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "GameTemplate/GameTemplate-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		28BE43501B067D09001D5E57 /* Build configuration list for PBXProject "GameTemplate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28BE43691B067D09001D5E57 /* Debug */,
+				28BE436A1B067D09001D5E57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		28BE436B1B067D09001D5E57 /* Build configuration list for PBXNativeTarget "GameTemplate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				28BE436C1B067D09001D5E57 /* Debug */,
+				28BE436D1B067D09001D5E57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 28BE434D1B067D09001D5E57 /* Project object */;
+}
