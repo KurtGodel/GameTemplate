@@ -27,7 +27,7 @@ public:
     void textEntered(sf::Event::TextEvent event);
     void receivedUdpMessage(std::string message);
     void receivedTcpMessage(std::string message);
-    void sendClientMessage(std::string message);
+    void sendMeMessage(std::string message);
 private:
     sf::RenderWindow *window;
     MainMenu mainMenu;

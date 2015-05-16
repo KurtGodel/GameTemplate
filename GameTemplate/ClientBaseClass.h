@@ -18,18 +18,17 @@ class ClientBaseClass {
 public:
     ClientBaseClass();
     ~ClientBaseClass();
-    void connectToServer(sf::IpAddress addressOfServer, unsigned short portOfServer);
-    void sendUdpMessage(std::string message);
-    void sendTcpMessage(std::string message);
+    virtual void sendMeMessage(std::string message) = 0;
     void checkForReceivedSocketMessages();
+protected:
+    void sendUdpMessage(std::string message);
+    void connectToServer(sf::IpAddress ipAdressOfServer, unsigned short portOfClient, unsigned short portOfServer);
     virtual void receivedUdpMessage(std::string message) = 0;
-    virtual void receivedTcpMessage(std::string message) = 0;
-    virtual void sendClientMessage(std::string message) = 0;
 private:
-    sf::IpAddress serverAddress = "";
+    sf::IpAddress serverIP = "";
+    unsigned short clientPort = 0;
     unsigned short serverPort = 0;
     sf::UdpSocket udpSocket;
-    sf::TcpSocket tcpSocket;
 };
 
 #endif /* defined(__GameTemplate__ClientBaseClass__) */

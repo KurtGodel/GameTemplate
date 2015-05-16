@@ -21,20 +21,13 @@
 #include "ResourcePath.hpp"
 
 #include "Client.h"
+#include "Server.h"
 
 void* startServer(void* input) {
-    /*
-    Server server(*(ServerInterface*) input);
+    Server server;
     while (true) {
         server.update();
-        // magic Thomas code: sleep 1 millisecond
-        struct timespec tim, tim2;
-        tim.tv_sec = 0;
-        tim.tv_nsec = 1000;
-        tim.tv_nsec *= 1000;
-        nanosleep(&tim , &tim2);
     }
-    */
 }
 
 
@@ -53,6 +46,9 @@ int main(int, char const**)
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
     Client client(window);
+    
+    pthread_t serverThread;
+    pthread_create(&serverThread, NULL, startServer, (void *)(&client));
     
     // Start the game loop
     while(window.isOpen())

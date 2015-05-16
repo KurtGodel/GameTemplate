@@ -14,31 +14,16 @@
 #include <time.h>
 #include <unordered_map>
 #include <SFML/Network.hpp>
+#include "ServerBaseClass.h"
 
-
-class Server {
+class Server : public ServerBaseClass {
 public:
-    /*
     Server();
     ~Server();
     void update();
     
 protected:
-    
-    virtual void processUdpMessage(std::string& message, sf::IpAddress address, unsigned short port) = 0;
-    
-private:
-    
-    bool checkForUdpMessages();
-    void sendUdpMessages(std::string message, sf::IpAddress address, unsigned int port);
-    
-    sf::UdpSocket udpSocket;
-    sf::IpAddress udpAddress;
-    unsigned short udpPort;
-    static const size_t UDP_DATA_LENGTH = 1024;
-    char udpData[UDP_DATA_LENGTH];
-    size_t udpLengthReceived;
-    */
+    void receivedUdpMessage(std::string& message, sf::IpAddress address, unsigned short port);
 };
 
 #endif /* defined(__GameTemplate__Server__) */

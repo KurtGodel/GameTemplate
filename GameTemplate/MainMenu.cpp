@@ -149,7 +149,7 @@ void MainMenu::buttonClicked(int index) {
             pageNum = MainMenuPageName_Home;
         }
         else if(pages[pageNum].buttons[index].label == "Sign In") {
-            app->sendClientMessage("Attempt Login\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue());
+            app->sendMeMessage("Attempt Login\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue());
         }
     }
     else if(pageNum == MainMenuPageName_SinglePlayer) {

@@ -8,37 +8,24 @@
 
 #include "Server.h"
 
-/*
 Server::Server() {
 }
 
 Server::~Server() {
-    udpSocket.unbind();
 }
 
 void Server::update() {
-    if(interface->shouldServerBeRunning) {
-        while(checkForUdpMessages()) {};
-    }
+    // DO STUFF HERE
+    
+    // sleep for 1 millisecond
+    struct timespec tim, tim2;
+    tim.tv_sec = 0;
+    tim.tv_nsec = 1000;
+    tim.tv_nsec *= 1000;
+    nanosleep(&tim , &tim2);
 }
 
-bool Server::checkForUdpMessages() {
-    if(udpSocket.receive(udpData, UDP_DATA_LENGTH, udpLengthReceived, udpAddress, udpPort) != sf::Socket::NotReady) {
-        std::string messageFromClient = "";
-        for(int i = 0; i < udpLengthReceived; i++) {
-            messageFromClient += udpData[i];
-        }
-        processUdpMessage(messageFromClient, udpAddress, udpPort);
-        return true;
-    }
-    return false;
+void Server::receivedUdpMessage(std::string& message, sf::IpAddress address, unsigned short port) {
+    std::cout << "S(" << message << ")" << std::endl;
+    sendUdpMessage("S(" + message + ")", address, port);
 }
-
-void Server::sendUdpMessages(std::string message, sf::IpAddress address, unsigned int port) {
-    char m[message.size()];
-    for(int i = 0; i < message.size(); i++) {
-        m[i] = message[i];
-    }
-    udpSocket.send(m, message.size(), address, port);
-}
-*/
