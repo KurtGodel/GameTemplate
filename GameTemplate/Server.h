@@ -18,12 +18,13 @@
 
 class Server : public ServerBaseClass {
 public:
-    Server();
+    Server(TcpMessageContainer &tcpMessageContainer);
     ~Server();
     void update();
     
 protected:
-    void receivedUdpMessage(std::string& message, sf::IpAddress address, unsigned short port);
+    void receivedUdpMessage(std::string message, sf::IpAddress address, unsigned short port);
+    void receivedTcpMessage(std::string message, sf::TcpSocket *socket);
 };
 
 #endif /* defined(__GameTemplate__Server__) */

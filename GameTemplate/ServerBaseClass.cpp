@@ -8,9 +8,10 @@
 
 #include "ServerBaseClass.h"
 
-ServerBaseClass::ServerBaseClass() {
-    udpPort = 55002;
-    udpSocket.bind(udpPort);
+ServerBaseClass::ServerBaseClass(TcpMessageContainer &tcpMessageContainer) {
+    messageContainer = &tcpMessageContainer;
+    serverUdpPort = 55002;
+    udpSocket.bind(serverUdpPort);
     udpSocket.setBlocking(false);
 }
 
@@ -19,12 +20,20 @@ ServerBaseClass::~ServerBaseClass() {
 }
 
 void ServerBaseClass::baseClassUpdate() {
-    checkForUdpMessages();
+    checkForMessages();
     update();
 }
 
-void ServerBaseClass::checkForUdpMessages() {
+void ServerBaseClass::checkForMessages() {
+    if(messageContainer->startClosing > 0) {
+        return;
+    }
+    
+    // check udp socket for messages
     char buffer[1024];
+    char *begin = buffer;
+    char *end = begin + sizeof(buffer);
+    std::fill(begin, end, 0);
     std::size_t received = 0;
     sf::IpAddress sender;
     unsigned short port;
@@ -32,6 +41,23 @@ void ServerBaseClass::checkForUdpMessages() {
     std::string message(buffer);
     if(message != "") {
         receivedUdpMessage(message, sender, port);
+    }
+    
+    // check tcp socket for message
+    std::vector<std::string> messagesToProcess;
+    std::vector<sf::TcpSocket*> socketsToProcess;
+    messageContainer->lock.lock();
+    if(messageContainer->messagesFromClients.size() > 0) {
+        while(messageContainer->messagesFromClients.size() > 0) {
+            messagesToProcess.push_back(messageContainer->messagesFromClients[0]);
+            messageContainer->messagesFromClients.erase(messageContainer->messagesFromClients.begin(), messageContainer->messagesFromClients.begin()+1);
+            socketsToProcess.push_back(messageContainer->socketsFromClients[0]);
+            messageContainer->socketsFromClients.erase(messageContainer->socketsFromClients.begin(), messageContainer->socketsFromClients.begin()+1);
+        }
+    }
+    messageContainer->lock.unlock();
+    for(int i=0; i<messagesToProcess.size(); i++) {
+        receivedTcpMessage(messagesToProcess[i], socketsToProcess[i]);
     }
 }
 
@@ -42,3 +68,12 @@ void ServerBaseClass::sendUdpMessage(std::string message, sf::IpAddress address,
     }
     udpSocket.send(m, message.size(), address, port);
 }
+
+void ServerBaseClass::sendTcpMessage(std::string message, sf::TcpSocket *socket) {
+    char m[message.size()];
+    for(int i = 0; i < message.size(); i++) {
+        m[i] = message[i];
+    }
+    socket->send(m, message.size());
+}
+

@@ -19,34 +19,53 @@
 
 ClientBaseClass::ClientBaseClass() :udpSocket() {
     udpSocket.setBlocking(false);
+    tcpSocket.setBlocking(false);
 }
 
 ClientBaseClass::~ClientBaseClass() {
     udpSocket.unbind();
 }
 
-void ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned short portOfClient, unsigned short portOfServer) {
+bool ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfClient, unsigned short udpPortOfServer, unsigned short tcpPortOfServer) {
     serverIP = ipAdressOfServer;
-    serverPort = portOfServer;
-    clientPort = portOfClient;
-    udpSocket.bind(clientPort);
+    serverUdpPort = udpPortOfServer;
+    clientUdpPort = udpPortOfClient;
+    udpSocket.bind(clientUdpPort);
+    
+    tcpSocket.connect(ipAdressOfServer, tcpPortOfServer);
+    
+    return true;
 }
 
 void ClientBaseClass::sendUdpMessage(std::string message) {
-    if(serverIP != "" && serverPort != 0 && clientPort != 0) {
-        udpSocket.send(message.c_str(), message.length(), serverIP, serverPort);
+    if(serverIP != "" && serverUdpPort != 0 && clientUdpPort != 0) {
+        udpSocket.send(message.c_str(), message.length(), serverIP, serverUdpPort);
     }
 }
 
 void ClientBaseClass::checkForReceivedSocketMessages() {
-    // check UDP socket
-    if(serverIP != "" && serverPort != 0 && clientPort != 0) {
+    std::cout << "CS(TCP:charlie)";
+    std::string message = "charlie";
+    tcpSocket.send(message.c_str(), message.size() + 1);
+    
+    
+    if(serverIP != "" && serverUdpPort != 0 && clientUdpPort != 0) {
+        // check UDP socket
         char udpBuffer[1024];
         std::size_t udpReceived = 0;
         sf::IpAddress sender;
         unsigned short port;
         udpSocket.receive(udpBuffer, sizeof(udpBuffer), udpReceived, sender, port);
-        std::string str(udpBuffer);
-        receivedUdpMessage(str);
+        std::string udpMessage(udpBuffer);
+        if(udpMessage != "") {
+            receivedUdpMessage(udpMessage);
+        }
+        
+        // check for TCP socket
+        char buffer[1024];
+        std::size_t received = 0;
+        tcpSocket.receive(buffer, sizeof(buffer), received);
+        std::string tcpMessage(buffer);
+        receivedTcpMessage(tcpMessage);
     }
 }

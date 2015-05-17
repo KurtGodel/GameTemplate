@@ -10,31 +10,16 @@
 
 Client::Client(sf::RenderWindow &w) : mainMenu(w, this), ClientBaseClass() {
     window = &w;
-    connectToServer("137.22.169.68", 55001, 55002);
+    connectToServer("137.22.169.68", 55001, 55002, 55004);
 }
 
 void Client::receivedUdpMessage(std::string message) {
-    std::cout << "C(" << message << ")\n";
-    sendUdpMessage("C(" + message + ")");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void Client::receivedTcpMessage(std::string message) {
+}
 
 void Client::think() {
-    sendUdpMessage("yam");
 }
 
 void Client::draw() {

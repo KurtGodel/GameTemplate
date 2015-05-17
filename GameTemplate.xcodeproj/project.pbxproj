@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		287280071B07A402000F62B3 /* ServerBaseClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 287280051B07A402000F62B3 /* ServerBaseClass.cpp */; };
+		2872800A1B0818C0000F62B3 /* ServerSocketController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 287280081B0818C0000F62B3 /* ServerSocketController.cpp */; };
 		28BE435C1B067D09001D5E57 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 28BE435B1B067D09001D5E57 /* ResourcePath.mm */; };
 		28BE435F1B067D09001D5E57 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE435E1B067D09001D5E57 /* main.cpp */; };
 		28BE43621B067D09001D5E57 /* cute_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 28BE43611B067D09001D5E57 /* cute_image.jpg */; };
@@ -29,6 +30,9 @@
 /* Begin PBXFileReference section */
 		287280051B07A402000F62B3 /* ServerBaseClass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerBaseClass.cpp; sourceTree = "<group>"; };
 		287280061B07A402000F62B3 /* ServerBaseClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerBaseClass.h; sourceTree = "<group>"; };
+		287280081B0818C0000F62B3 /* ServerSocketController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerSocketController.cpp; sourceTree = "<group>"; };
+		287280091B0818C0000F62B3 /* ServerSocketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSocketController.h; sourceTree = "<group>"; };
+		2872800C1B081A1C000F62B3 /* TcpMessageContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TcpMessageContainer.h; sourceTree = "<group>"; };
 		28BE43561B067D09001D5E57 /* GameTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GameTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28BE435A1B067D09001D5E57 /* GameTemplate-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GameTemplate-Info.plist"; sourceTree = "<group>"; };
 		28BE435B1B067D09001D5E57 /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
@@ -90,6 +94,9 @@
 				28BE435B1B067D09001D5E57 /* ResourcePath.mm */,
 				28BE435D1B067D09001D5E57 /* ResourcePath.hpp */,
 				28BE435E1B067D09001D5E57 /* main.cpp */,
+				287280081B0818C0000F62B3 /* ServerSocketController.cpp */,
+				287280091B0818C0000F62B3 /* ServerSocketController.h */,
+				2872800C1B081A1C000F62B3 /* TcpMessageContainer.h */,
 				28BE43701B067D3D001D5E57 /* Server.h */,
 				28BE43711B067D3D001D5E57 /* Server.cpp */,
 				28BE437A1B067D3D001D5E57 /* Client.h */,
@@ -241,6 +248,7 @@
 				28BE43811B067D3D001D5E57 /* MenuButton.cpp in Sources */,
 				28BE437D1B067D3D001D5E57 /* TextBox.cpp in Sources */,
 				28BE437E1B067D3D001D5E57 /* Server.cpp in Sources */,
+				2872800A1B0818C0000F62B3 /* ServerSocketController.cpp in Sources */,
 				28BE435C1B067D09001D5E57 /* ResourcePath.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

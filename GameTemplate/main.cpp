@@ -22,21 +22,27 @@
 
 #include "Client.h"
 #include "Server.h"
+#include "ServerSocketController.h"
+#include "TcpMessageContainer.h"
 
 void* startServer(void* input) {
-    Server server;
+    Server server(*(TcpMessageContainer*) input);
     while (true) {
-        server.update();
+        server.baseClassUpdate();
     }
 }
 
+void* startServerSocketController(void* input) {
+    ServerSocketController serverSocketController(*(TcpMessageContainer*) input);
+    serverSocketController.run();
+}
 
 int main(int, char const**)
 {
     // Create the fullscreen window
     sf::VideoMode oneValidFullscreenMode = sf::VideoMode::getFullscreenModes()[0];
     sf::RenderWindow window(oneValidFullscreenMode, "SFML window", sf::Style::Fullscreen);
-    window.setFramerateLimit(10);
+    window.setFramerateLimit(20);
 
     // Set the Icon
     sf::Image icon;
@@ -45,20 +51,38 @@ int main(int, char const**)
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
-    Client client(window);
+    TcpMessageContainer tcpMessageContainer;
+    
+    pthread_t startServerSocketControllerThread;
+    pthread_create(&startServerSocketControllerThread, NULL, startServerSocketController, (void *)(&tcpMessageContainer));
+    
+    // wait 0.1 seconds for the server to be set up
+    struct timespec tim, tim2;
+    tim.tv_sec = 0;
+    tim.tv_nsec = 100000;
+    tim.tv_nsec *= 1000;
+    nanosleep(&tim , &tim2);
     
     pthread_t serverThread;
-    pthread_create(&serverThread, NULL, startServer, (void *)(&client));
+    pthread_create(&serverThread, NULL, startServer, (void *)(&tcpMessageContainer));
+    
+    // wait 0.1 seconds for the server to be set up
+    nanosleep(&tim , &tim2);
+    
+    Client client(window);
     
     // Start the game loop
     while(window.isOpen())
     {
+        if(tcpMessageContainer.startClosing >= 2) {
+            window.close();
+        }
         // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
             if(event.type == sf::Event::Closed) {
-                window.close();
+                tcpMessageContainer.startClosing = 1;
             }
             else if(event.type == sf::Event::MouseMoved) {
                 client.mouseMove(event.mouseMove);

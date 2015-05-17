@@ -8,7 +8,7 @@
 
 #include "Server.h"
 
-Server::Server() {
+Server::Server(TcpMessageContainer &tcpMessageContainer) : ServerBaseClass(tcpMessageContainer) {
 }
 
 Server::~Server() {
@@ -25,7 +25,8 @@ void Server::update() {
     nanosleep(&tim , &tim2);
 }
 
-void Server::receivedUdpMessage(std::string& message, sf::IpAddress address, unsigned short port) {
-    std::cout << "S(" << message << ")" << std::endl;
-    sendUdpMessage("S(" + message + ")", address, port);
+void Server::receivedUdpMessage(std::string message, sf::IpAddress address, unsigned short port) {
+}
+
+void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
 }

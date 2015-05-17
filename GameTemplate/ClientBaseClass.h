@@ -22,13 +22,16 @@ public:
     void checkForReceivedSocketMessages();
 protected:
     void sendUdpMessage(std::string message);
-    void connectToServer(sf::IpAddress ipAdressOfServer, unsigned short portOfClient, unsigned short portOfServer);
+    bool connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfClient, unsigned short udpPortOfServer, unsigned short tcpPortOfServer);
     virtual void receivedUdpMessage(std::string message) = 0;
+    virtual void receivedTcpMessage(std::string message) = 0;
 private:
     sf::IpAddress serverIP = "";
-    unsigned short clientPort = 0;
-    unsigned short serverPort = 0;
+    unsigned short clientUdpPort = 0;
+    unsigned short serverUdpPort = 0;
+    
     sf::UdpSocket udpSocket;
+    sf::TcpSocket tcpSocket;
 };
 
 #endif /* defined(__GameTemplate__ClientBaseClass__) */
