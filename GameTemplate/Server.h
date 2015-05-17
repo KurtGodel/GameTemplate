@@ -19,7 +19,6 @@
 class Server : public ServerBaseClass {
 public:
     Server(TcpMessageContainer &tcpMessageContainer);
-    ~Server();
     void update();
     
 protected:

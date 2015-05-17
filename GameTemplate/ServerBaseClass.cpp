@@ -19,14 +19,19 @@ ServerBaseClass::~ServerBaseClass() {
     udpSocket.unbind();
 }
 
-void ServerBaseClass::baseClassUpdate() {
-    checkForMessages();
+bool ServerBaseClass::baseClassUpdate() {
+    bool shouldStop = checkForMessages();
+    if(shouldStop) {
+        return true;
+    }
     update();
+    return false;
 }
 
-void ServerBaseClass::checkForMessages() {
+bool ServerBaseClass::checkForMessages() {
     if(messageContainer->startClosing > 0) {
-        return;
+        messageContainer->startClosing++;
+        return true;
     }
     
     // check udp socket for messages
@@ -59,6 +64,7 @@ void ServerBaseClass::checkForMessages() {
     for(int i=0; i<messagesToProcess.size(); i++) {
         receivedTcpMessage(messagesToProcess[i], socketsToProcess[i]);
     }
+    return false;
 }
 
 void ServerBaseClass::sendUdpMessage(std::string message, sf::IpAddress address, unsigned int port) {

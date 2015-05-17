@@ -22,11 +22,6 @@ void ServerSocketController::run() {
     // Endless loop that waits for new connections
     while(true)
     {
-        if(messageContainer->startClosing > 0) {
-            messageContainer->startClosing++;
-            return;
-        }
-        
         // Make the selector wait for data on any socket
         if(selector.wait())
         {

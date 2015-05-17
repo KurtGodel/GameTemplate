@@ -27,8 +27,9 @@
 
 void* startServer(void* input) {
     Server server(*(TcpMessageContainer*) input);
-    while (true) {
-        server.baseClassUpdate();
+    bool shouldStop = false;
+    while (!shouldStop) {
+        shouldStop = server.baseClassUpdate();
     }
 }
 

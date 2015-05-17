@@ -21,7 +21,7 @@ class ServerBaseClass {
 public:
     ServerBaseClass(TcpMessageContainer &tcpMessageContainer);
     ~ServerBaseClass();
-    void baseClassUpdate();
+    bool baseClassUpdate();
     
 protected:
     virtual void update() = 0;
@@ -30,7 +30,7 @@ protected:
     void sendUdpMessage(std::string message, sf::IpAddress address, unsigned int port);
     void sendTcpMessage(std::string message, sf::TcpSocket *socket);
 private:
-    void checkForMessages();
+    bool checkForMessages();
     unsigned short serverUdpPort;
     sf::UdpSocket udpSocket;
     TcpMessageContainer *messageContainer;

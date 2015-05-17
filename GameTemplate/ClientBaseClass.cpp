@@ -44,11 +44,6 @@ void ClientBaseClass::sendUdpMessage(std::string message) {
 }
 
 void ClientBaseClass::checkForReceivedSocketMessages() {
-    std::cout << "CS(TCP:charlie)";
-    std::string message = "charlie";
-    tcpSocket.send(message.c_str(), message.size() + 1);
-    
-    
     if(serverIP != "" && serverUdpPort != 0 && clientUdpPort != 0) {
         // check UDP socket
         char udpBuffer[1024];
