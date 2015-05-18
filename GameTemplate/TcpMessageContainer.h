@@ -17,6 +17,8 @@ class TcpMessageContainer {
 public:
     int startClosing = 0;
     std::mutex lock;
+    unsigned short serverPort = 0;
+    unsigned short serverUdpPort = 0;
     std::vector<std::string>messagesFromClients;
     std::vector<sf::TcpSocket*>socketsFromClients;
 };

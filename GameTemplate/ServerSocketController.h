@@ -25,6 +25,7 @@ private:
     sf::SocketSelector selector;
     sf::TcpListener listener;
     TcpMessageContainer *messageContainer;
+    unsigned short tcpPort;
 };
 
 #endif /* defined(__GameTemplate__ServerSocketController__) */

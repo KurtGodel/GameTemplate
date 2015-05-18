@@ -17,7 +17,8 @@
  checkForReceivedSocketMessages();
 */
 
-ClientBaseClass::ClientBaseClass() :udpSocket() {
+ClientBaseClass::ClientBaseClass(TcpMessageContainer &tcpMessageContainer) :udpSocket() {
+    messageContainer = &tcpMessageContainer;
     udpSocket.setBlocking(false);
     tcpSocket.setBlocking(false);
 }
@@ -26,11 +27,15 @@ ClientBaseClass::~ClientBaseClass() {
     udpSocket.unbind();
 }
 
-bool ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfClient, unsigned short udpPortOfServer, unsigned short tcpPortOfServer) {
+bool ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfServer, unsigned short tcpPortOfServer) {
     serverIP = ipAdressOfServer;
-    serverUdpPort = udpPortOfServer;
-    clientUdpPort = udpPortOfClient;
-    udpSocket.bind(clientUdpPort);
+    if(udpPortOfServer == 0) {
+        serverUdpPort = messageContainer->serverUdpPort;
+    }
+    else {
+        serverUdpPort = udpPortOfServer;
+    }
+    udpSocket.bind(sf::Socket::AnyPort);
     
     tcpSocket.connect(ipAdressOfServer, tcpPortOfServer);
     
@@ -38,13 +43,19 @@ bool ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned s
 }
 
 void ClientBaseClass::sendUdpMessage(std::string message) {
-    if(serverIP != "" && serverUdpPort != 0 && clientUdpPort != 0) {
+    if(serverIP != "" && serverUdpPort != 0) {
         udpSocket.send(message.c_str(), message.length(), serverIP, serverUdpPort);
     }
 }
 
+void ClientBaseClass::sendTcpMessage(std::string message) {
+    if(serverIP != "" && serverUdpPort != 0) {
+        tcpSocket.send(message.c_str(), message.length());
+    }
+}
+
 void ClientBaseClass::checkForReceivedSocketMessages() {
-    if(serverIP != "" && serverUdpPort != 0 && clientUdpPort != 0) {
+    if(serverIP != "" && serverUdpPort != 0) {
         // check UDP socket
         char udpBuffer[1024];
         std::size_t udpReceived = 0;
@@ -63,4 +74,12 @@ void ClientBaseClass::checkForReceivedSocketMessages() {
         std::string tcpMessage(buffer);
         receivedTcpMessage(tcpMessage);
     }
+}
+
+unsigned short ClientBaseClass::getServerTcpPort() {
+    return messageContainer->serverPort;
+}
+
+unsigned short ClientBaseClass::getServerUdpPort() {
+    return messageContainer->serverUdpPort;
 }

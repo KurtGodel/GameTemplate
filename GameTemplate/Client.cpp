@@ -11,28 +11,38 @@
 /*
  Just remember to initalize the ClientBaseClass
 */
-Client::Client(sf::RenderWindow &w) : mainMenu(w, this), ClientBaseClass() {
+Client::Client(sf::RenderWindow &w, TcpMessageContainer &tcpMessageContainer) : mainMenu(w, this), ClientBaseClass(tcpMessageContainer) {
     window = &w;
     sf::IpAddress myIpAddress = sf::IpAddress::getLocalAddress();
-    connectToServer(myIpAddress, 55001, 55002, 55004);
+    connectToServer(myIpAddress, 0, getServerTcpPort());
 }
 
 /*
  This method is called whenever we receive a UDP message from the server.
 */
 void Client::receivedUdpMessage(std::string message) {
+    std::cout << "CR{UDP:" << message << "}\n";
+    std::cout << "CS{UDP:alpha}\n";
+    sendUdpMessage("alpha");
+    
 }
 
 /*
  This method is called whenever we receive a TCP message from the server.
  */
 void Client::receivedTcpMessage(std::string message) {
+    std::cout << "CR{TCP:" << message << "}\n";
+    std::cout << "CS{TCP:beta}\n";
+    sendTcpMessage("beta");
 }
 
 /*
  This method is called once-per-frame prior to the draw method. Perform non-drawing related computations here.
 */
 void Client::think() {
+    if(inMainMenu) {
+        mainMenu.think();
+    }
 }
 
 /*
@@ -47,7 +57,31 @@ void Client::draw() {
 /*
  This function is declared in ClientBaseClass to allow its child objects to send it messages. For instance mainMenu needs to send Client a message  when a user tries to connect to the server.
 */
-void Client::sendMeMessage(std::string message) {
+std::string Client::sendMeMessage(std::string message) {
+    std::vector<std::string> messages = split(message, '\n');
+    if(messages[0] == "get my server port") {
+        return std::to_string(getServerTcpPort());
+    }
+    else if(messages[0] == "get my server udp port") {
+        return std::to_string(getServerUdpPort());
+    }
+    else if(messages[0] == "Login To Server" && messages.size() >= 5) {
+        std::string username = messages[1];
+        sf::IpAddress ipAddress(messages[2]);
+        unsigned short udpPort = stoi(messages[3]);
+        unsigned short tcpPort = stoi(messages[4]);
+        connectToServer(ipAddress, udpPort, tcpPort);
+    }
+}
+
+std::vector<std::string> Client::split(const std::string s, char delim) {
+    std::vector<std::string> elems;
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
 }
 
 /*

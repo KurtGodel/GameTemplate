@@ -31,14 +31,15 @@ void Server::update() {
 */
 void Server::receivedUdpMessage(std::string message, sf::IpAddress address, unsigned short port) {
     std::cout << "SR{UDP:" << message << "}\n";
-    sendUdpMessage("beta", address, port);
+    std::cout << "SS{UDP:gamma}";
+    sendUdpMessage("gamma", address, port);
 }
 
 /*
  This method is called every time the server receives a TCP message from a client. This is the only way to get a client's socket. Besides receivedUdpMessages(), this is the only way to get a client's IP address.
 */
 void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
-    std::cout << "SR(TCP:" << message << ")\n";
-    std::cout << "SS{TCP:quails}\n";
-    sendTcpMessage("quails", socket);
+    std::cout << "SR{TCP:" << message << "}\n";
+    std::cout << "SS{TCP:delta}\n";
+    sendTcpMessage("delta", socket);
 }

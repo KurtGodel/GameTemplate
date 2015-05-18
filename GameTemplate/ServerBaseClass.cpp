@@ -11,6 +11,7 @@
 ServerBaseClass::ServerBaseClass(TcpMessageContainer &tcpMessageContainer) {
     messageContainer = &tcpMessageContainer;
     serverUdpPort = 55002;
+    messageContainer->serverUdpPort = serverUdpPort;
     udpSocket.bind(serverUdpPort);
     udpSocket.setBlocking(false);
 }

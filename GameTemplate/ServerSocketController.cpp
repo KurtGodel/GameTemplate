@@ -10,8 +10,10 @@
 
 ServerSocketController::ServerSocketController(TcpMessageContainer &tcpMessageContainer) {
     messageContainer = &tcpMessageContainer;
-    sf::Socket::Status status = listener.listen(55004);
+    sf::Socket::Status status = listener.listen(sf::Socket::AnyPort);
     selector.add(listener);
+    int serverPort = listener.getLocalPort();
+    messageContainer->serverPort = serverPort;
 }
 
 ServerSocketController::~ServerSocketController() {

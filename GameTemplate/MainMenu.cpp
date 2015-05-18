@@ -8,12 +8,12 @@
 
 #include "MainMenu.h"
 
-MainMenu::MainMenu(sf::RenderWindow &w) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
+MainMenu::MainMenu(sf::RenderWindow &w) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), udpPortTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
     std::cout << "Error: Main Menu not constructed with access to parent app";
     w.close();
 }
 
-MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
+MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), udpPortTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
     window = &w;
     app = parentApp;
     if(!buttonTexture.loadFromFile(resourcePath() + "button.png")) {
@@ -35,17 +35,21 @@ MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTe
     pages[0].labels.push_back(sf::Text("Home Page", font, 100));
     sf::FloatRect rect = pages[0].labels[0].getGlobalBounds();
     pages[0].labels[0].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.x/10.0);
-    pages[0].buttons.push_back(MenuButton("Log In", &buttonTexture, &font));
+    pages[0].buttons.push_back(MenuButton("Multiplayer Server", &buttonTexture, &font));
     pages[0].buttons[0].size = screenSize.x/3.0;
     pages[0].buttons[0].center(screenSize);
-    pages[0].buttons[0].y += screenSize.x/15.0;
-    pages[0].buttons.push_back(MenuButton("Single Player", &buttonTexture, &font));
+    pages[0].buttons[0].y += 2.0*screenSize.x/15.0;
+    pages[0].buttons.push_back(MenuButton("Multiplayer Client", &buttonTexture, &font));
     pages[0].buttons[1].size = screenSize.x/3.0;
     pages[0].buttons[1].center(screenSize);
+    pages[0].buttons[1].y += screenSize.x/15.0;
+    pages[0].buttons.push_back(MenuButton("Single Player", &buttonTexture, &font));
+    pages[0].buttons[2].size = screenSize.x/3.0;
+    pages[0].buttons[2].center(screenSize);
     
-    // Login
+    // Multiplayer Client
     pages.push_back(MenuPage());
-    pages[1].labels.push_back(sf::Text("Log In", font, 100));
+    pages[1].labels.push_back(sf::Text("Multiplayer Client", font, 100));
     rect = pages[1].labels[0].getGlobalBounds();
     pages[1].labels[0].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.x/10.0);
     pages[1].buttons.push_back(MenuButton("Back", &buttonTexture, &font));
@@ -55,7 +59,7 @@ MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTe
     pages[1].buttons.push_back(MenuButton("Sign In", &buttonTexture, &font));
     pages[1].buttons[1].size = screenSize.x/3.0;
     pages[1].buttons[1].center(screenSize);
-    pages[1].buttons[1].y += screenSize.x/7.5;
+    pages[1].buttons[1].y += screenSize.x/15.0 * 3.0;
     
     pages[1].labels.push_back(sf::Text("Username:", font, 50));
     rect = pages[1].labels[1].getGlobalBounds();
@@ -72,13 +76,21 @@ MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTe
     serverIpTextBox.center(screenSize);
     serverIpTextBox.maxCharacterLength = 20;
     
-    pages[1].labels.push_back(sf::Text("Port #:", font, 50));
+    pages[1].labels.push_back(sf::Text("Ser. TCP Port:", font, 50));
     rect = pages[1].labels[3].getGlobalBounds();
     pages[1].labels[3].setPosition(0.0, screenSize.y/2.0 + screenSize.x/15.0 - 30);
     portTextBox.setSize(screenSize.x/2.0, screenSize.x/20.0);
     portTextBox.center(screenSize);
     portTextBox.setPosition(portTextBox.getPosition().x, portTextBox.getPosition().y + screenSize.x/15.0);
     portTextBox.maxCharacterLength = 5;
+    
+    pages[1].labels.push_back(sf::Text("Ser. UDP Port:", font, 50));
+    rect = pages[1].labels[4].getGlobalBounds();
+    pages[1].labels[4].setPosition(0.0, screenSize.y/2.0 + 2.0 * screenSize.x/15.0 - 30);
+    udpPortTextBox.setSize(screenSize.x/2.0, screenSize.x/20.0);
+    udpPortTextBox.center(screenSize);
+    udpPortTextBox.setPosition(udpPortTextBox.getPosition().x, udpPortTextBox.getPosition().y + 2.0 * screenSize.x/15.0);
+    udpPortTextBox.maxCharacterLength = 5;
     
     // Single Player
     pages.push_back(MenuPage());
@@ -89,10 +101,38 @@ MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTe
     pages[2].buttons[0].size = screenSize.x/3.0;
     pages[2].buttons[0].x = 0;
     pages[2].buttons[0].y = 0;
+    
+    //Multiplayer Server
+    pages.push_back(MenuPage());
+    pages[3].labels.push_back(sf::Text("Multiplayer Server", font, 100));
+    rect = pages[3].labels[0].getGlobalBounds();
+    pages[3].labels[0].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.x/10.0);
+    pages[3].buttons.push_back(MenuButton("Back", &buttonTexture, &font));
+    pages[3].buttons[0].size = screenSize.x/3.0;
+    pages[3].buttons[0].x = 0;
+    pages[3].buttons[0].y = 0;
+    pages[3].labels.push_back(sf::Text("IP: ???.???.???.???", font, 50));
+    rect = pages[3].labels[1].getGlobalBounds();
+    pages[3].labels[1].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.y/2 - rect.height/2.0);
+    pages[3].labels.push_back(sf::Text("TCP Port: ?????", font, 50));
+    rect = pages[3].labels[2].getGlobalBounds();
+    pages[3].labels[2].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.y/2 - rect.height/2.0 + 60.0);
+    pages[3].labels.push_back(sf::Text("UDP Port: ?????", font, 50));
+    rect = pages[3].labels[3].getGlobalBounds();
+    pages[3].labels[3].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.y/2 - rect.height/2.0 + 120.0);
 }
 
 void MainMenu::think() {
-    //
+    if(pageNum == MainMenuPageName_MultiplayerServer) {
+        std::string ip = sf::IpAddress::getLocalAddress().toString();
+        pages[3].labels[1].setString("IP: " + ip);
+        
+        std::string portNum = app->sendMeMessage("get my server port");
+        pages[3].labels[2].setString("TCP Port: " + portNum);
+        
+        portNum = app->sendMeMessage("get my server udp port");
+        pages[3].labels[3].setString("UDP Port: " + portNum);
+    }
 }
 
 void MainMenu::draw() {
@@ -103,15 +143,17 @@ void MainMenu::draw() {
         window->draw(pages[pageNum].labels[i]);
     }
     
-    if(pageNum == MainMenuPageName_Login) {
+    if(pageNum == MainMenuPageName_MultiplayerClient) {
         usernameTextBox.render(window);
         serverIpTextBox.render(window);
         portTextBox.render(window);
+        udpPortTextBox.render(window);
     }
     else {
         usernameTextBox.unfocus();
         serverIpTextBox.unfocus();
         portTextBox.unfocus();
+        udpPortTextBox.unfocus();
     }
     frameCounter++;
 }
@@ -128,31 +170,40 @@ void MainMenu::mouseDown(sf::Event::MouseButtonEvent event) {
             break;
         }
     }
-    if(pageNum == MainMenuPageName_Login) {
+    if(pageNum == MainMenuPageName_MultiplayerClient) {
         usernameTextBox.mouseButtonPressed(event);
         serverIpTextBox.mouseButtonPressed(event);
         portTextBox.mouseButtonPressed(event);
+        udpPortTextBox.mouseButtonPressed(event);
     }
 }
 
 void MainMenu::buttonClicked(int index) {
     if(pageNum == MainMenuPageName_Home) {
-        if(pages[pageNum].buttons[index].label == "Log In") {
-            pageNum = MainMenuPageName_Login;
+        if(pages[pageNum].buttons[index].label == "Multiplayer Client") {
+            pageNum = MainMenuPageName_MultiplayerClient;
         }
         else if(pages[pageNum].buttons[index].label == "Single Player") {
             pageNum = MainMenuPageName_SinglePlayer;
         }
+        else if(pages[pageNum].buttons[index].label == "Multiplayer Server") {
+            pageNum = MainMenuPageName_MultiplayerServer;
+        }
     }
-    else if(pageNum == MainMenuPageName_Login) {
+    else if(pageNum == MainMenuPageName_MultiplayerClient) {
         if(pages[pageNum].buttons[index].label == "Back") {
             pageNum = MainMenuPageName_Home;
         }
         else if(pages[pageNum].buttons[index].label == "Sign In") {
-            app->sendMeMessage("Attempt Login\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue());
+            app->sendMeMessage("Login To Server\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue());
         }
     }
     else if(pageNum == MainMenuPageName_SinglePlayer) {
+        if(pages[pageNum].buttons[index].label == "Back") {
+            pageNum = MainMenuPageName_Home;
+        }
+    }
+    else if(pageNum == MainMenuPageName_MultiplayerServer) {
         if(pages[pageNum].buttons[index].label == "Back") {
             pageNum = MainMenuPageName_Home;
         }
@@ -163,10 +214,11 @@ void MainMenu::mouseUp(sf::Event::MouseButtonEvent event) {
 }
 
 void MainMenu::keyDown(sf::Event::KeyEvent event) {
-    if(pageNum == MainMenuPageName_Login) {
+    if(pageNum == MainMenuPageName_MultiplayerClient) {
         usernameTextBox.keyPressed(event);
         serverIpTextBox.keyPressed(event);
         portTextBox.keyPressed(event);
+        udpPortTextBox.keyPressed(event);
     }
 }
 
@@ -174,10 +226,11 @@ void MainMenu::keyUp(sf::Event::KeyEvent event) {
 }
 
 void MainMenu::textEntered(sf::Event::TextEvent event) {
-    if(pageNum == MainMenuPageName_Login) {
+    if(pageNum == MainMenuPageName_MultiplayerClient) {
         usernameTextBox.textEntered(event.unicode);
         serverIpTextBox.textEntered(event.unicode);
         portTextBox.textEntered(event.unicode);
+        udpPortTextBox.textEntered(event.unicode);
     }
 }
 

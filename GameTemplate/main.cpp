@@ -70,7 +70,7 @@ int main(int, char const**)
     // wait 0.1 seconds for the server to be set up
     nanosleep(&tim , &tim2);
     
-    Client client(window);
+    Client client(window, tcpMessageContainer);
     
     // Start the game loop
     while(window.isOpen())

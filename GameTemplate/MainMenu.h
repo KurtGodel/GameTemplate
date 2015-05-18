@@ -20,8 +20,9 @@
 
 enum MainMenuPageName {
     MainMenuPageName_Home = 0,
-    MainMenuPageName_Login = 1,
-    MainMenuPageName_SinglePlayer = 2
+    MainMenuPageName_MultiplayerClient = 1,
+    MainMenuPageName_SinglePlayer = 2,
+    MainMenuPageName_MultiplayerServer = 3,
 };
 
 class MainMenu {
@@ -53,6 +54,7 @@ private:
     TextBox usernameTextBox;
     TextBox serverIpTextBox;
     TextBox portTextBox;
+    TextBox udpPortTextBox;
 };
 
 

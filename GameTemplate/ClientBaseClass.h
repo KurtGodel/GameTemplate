@@ -13,25 +13,30 @@
 #include <string>
 #include <iostream>
 #include <SFML/Network.hpp>
+#include "TcpMessageContainer.h"
 
 class ClientBaseClass {
 public:
-    ClientBaseClass();
+    ClientBaseClass(TcpMessageContainer &tcpMessageContainer);
     ~ClientBaseClass();
-    virtual void sendMeMessage(std::string message) = 0;
+    virtual std::string sendMeMessage(std::string message) = 0;
     void checkForReceivedSocketMessages();
 protected:
     void sendUdpMessage(std::string message);
-    bool connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfClient, unsigned short udpPortOfServer, unsigned short tcpPortOfServer);
+    void sendTcpMessage(std::string message);
+    bool connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfServer, unsigned short tcpPortOfServer);
     virtual void receivedUdpMessage(std::string message) = 0;
     virtual void receivedTcpMessage(std::string message) = 0;
+    unsigned short getServerTcpPort();
+    unsigned short getServerUdpPort();
 private:
     sf::IpAddress serverIP = "";
-    unsigned short clientUdpPort = 0;
     unsigned short serverUdpPort = 0;
     
     sf::UdpSocket udpSocket;
     sf::TcpSocket tcpSocket;
+    
+    TcpMessageContainer *messageContainer;
 };
 
 #endif /* defined(__GameTemplate__ClientBaseClass__) */
