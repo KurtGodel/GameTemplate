@@ -28,6 +28,8 @@ ClientBaseClass::~ClientBaseClass() {
 }
 
 bool ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned short udpPortOfServer, unsigned short tcpPortOfServer) {
+    std::cout << "<" << ipAdressOfServer << ":" << udpPortOfServer << ":" << tcpPortOfServer << ">";
+    
     serverIP = ipAdressOfServer;
     if(udpPortOfServer == 0) {
         serverUdpPort = messageContainer->serverUdpPort;
@@ -35,9 +37,21 @@ bool ClientBaseClass::connectToServer(sf::IpAddress ipAdressOfServer, unsigned s
     else {
         serverUdpPort = udpPortOfServer;
     }
+    udpSocket.unbind();
     udpSocket.bind(sf::Socket::AnyPort);
     
-    tcpSocket.connect(ipAdressOfServer, tcpPortOfServer);
+    tcpSocket.disconnect();
+    sf::Socket::Status status = tcpSocket.connect(ipAdressOfServer, tcpPortOfServer);
+    
+    // wait for the sockets to connect
+    struct timespec tim, tim2;
+    tim.tv_sec = 0;
+    tim.tv_nsec = 100000;
+    tim.tv_nsec *= 1000;
+    nanosleep(&tim , &tim2);
+    
+    sendTcpMessage("New Client");
+    sendUdpMessage("New Client");
     
     return true;
 }

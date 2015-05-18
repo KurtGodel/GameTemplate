@@ -22,9 +22,6 @@ Client::Client(sf::RenderWindow &w, TcpMessageContainer &tcpMessageContainer) : 
 */
 void Client::receivedUdpMessage(std::string message) {
     std::cout << "CR{UDP:" << message << "}\n";
-    std::cout << "CS{UDP:alpha}\n";
-    sendUdpMessage("alpha");
-    
 }
 
 /*
@@ -32,8 +29,6 @@ void Client::receivedUdpMessage(std::string message) {
  */
 void Client::receivedTcpMessage(std::string message) {
     std::cout << "CR{TCP:" << message << "}\n";
-    std::cout << "CS{TCP:beta}\n";
-    sendTcpMessage("beta");
 }
 
 /*
@@ -68,8 +63,9 @@ std::string Client::sendMeMessage(std::string message) {
     else if(messages[0] == "Login To Server" && messages.size() >= 5) {
         std::string username = messages[1];
         sf::IpAddress ipAddress(messages[2]);
-        unsigned short udpPort = stoi(messages[3]);
-        unsigned short tcpPort = stoi(messages[4]);
+        unsigned short tcpPort = stoi(messages[3]);
+        unsigned short udpPort = stoi(messages[4]);
+
         connectToServer(ipAddress, udpPort, tcpPort);
     }
 }

@@ -195,7 +195,7 @@ void MainMenu::buttonClicked(int index) {
             pageNum = MainMenuPageName_Home;
         }
         else if(pages[pageNum].buttons[index].label == "Sign In") {
-            app->sendMeMessage("Login To Server\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue());
+            app->sendMeMessage("Login To Server\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue() + "\n" + udpPortTextBox.getValue());
         }
     }
     else if(pageNum == MainMenuPageName_SinglePlayer) {

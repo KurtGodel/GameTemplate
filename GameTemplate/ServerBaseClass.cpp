@@ -10,9 +10,9 @@
 
 ServerBaseClass::ServerBaseClass(TcpMessageContainer &tcpMessageContainer) {
     messageContainer = &tcpMessageContainer;
-    serverUdpPort = 55002;
+    udpSocket.bind(sf::Socket::AnyPort);
+    serverUdpPort = udpSocket.getLocalPort();
     messageContainer->serverUdpPort = serverUdpPort;
-    udpSocket.bind(serverUdpPort);
     udpSocket.setBlocking(false);
 }
 

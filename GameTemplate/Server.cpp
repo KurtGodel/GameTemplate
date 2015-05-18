@@ -31,8 +31,6 @@ void Server::update() {
 */
 void Server::receivedUdpMessage(std::string message, sf::IpAddress address, unsigned short port) {
     std::cout << "SR{UDP:" << message << "}\n";
-    std::cout << "SS{UDP:gamma}";
-    sendUdpMessage("gamma", address, port);
 }
 
 /*
@@ -40,6 +38,4 @@ void Server::receivedUdpMessage(std::string message, sf::IpAddress address, unsi
 */
 void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
     std::cout << "SR{TCP:" << message << "}\n";
-    std::cout << "SS{TCP:delta}\n";
-    sendTcpMessage("delta", socket);
 }
