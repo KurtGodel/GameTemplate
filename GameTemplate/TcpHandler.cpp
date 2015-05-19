@@ -1,26 +1,24 @@
 //
-//  ServerSocketController.cpp
+//  TcpHandler.cpp
 //  GameTemplate
 //
-//  Created by Thomas Redding on 5/16/15.
+//  Created by Thomas Redding on 5/18/15.
 //  Copyright (c) 2015 Thomas Redding. All rights reserved.
 //
 
-#include "ServerSocketController.h"
+#include "TcpHandler.h"
 
-ServerSocketController::ServerSocketController(TcpMessageContainer &tcpMessageContainer) {
-    messageContainer = &tcpMessageContainer;
+TcpHandler::TcpHandler(TcpHandlerCommunicator &tcpHandlerCommunicator) {
+    communicator = &tcpHandlerCommunicator;
     sf::Socket::Status status = listener.listen(sf::Socket::AnyPort);
     selector.add(listener);
-    int serverPort = listener.getLocalPort();
-    messageContainer->serverPort = serverPort;
 }
 
-ServerSocketController::~ServerSocketController() {
+TcpHandler::~TcpHandler() {
     //
 }
 
-void ServerSocketController::run() {
+void TcpHandler::run() {
     // Endless loop that waits for new connections
     while(true)
     {
@@ -65,10 +63,10 @@ void ServerSocketController::run() {
                         
                         if(message != "") {
                             std::string addres = client.getRemoteAddress().toString();
-                            messageContainer->lock.lock();
-                            messageContainer->socketsFromClients.push_back(&client);
-                            messageContainer->messagesFromClients.push_back(message);
-                            messageContainer->lock.unlock();
+                            communicator->lock.lock();
+                            communicator->socketsFromClients.push_back(&client);
+                            communicator->messagesFromClients.push_back(message);
+                            communicator->lock.unlock();
                         }
                     }
                 }

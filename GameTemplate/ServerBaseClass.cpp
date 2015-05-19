@@ -2,40 +2,64 @@
 //  ServerBaseClass.cpp
 //  GameTemplate
 //
-//  Created by Thomas Redding on 5/16/15.
+//  Created by Thomas Redding on 5/19/15.
 //  Copyright (c) 2015 Thomas Redding. All rights reserved.
 //
 
 #include "ServerBaseClass.h"
 
-ServerBaseClass::ServerBaseClass(TcpMessageContainer &tcpMessageContainer) {
-    messageContainer = &tcpMessageContainer;
+ServerBaseClass::ServerBaseClass(TcpHandlerCommunicator &tcpHandlerCommunicator, ClientServerCommunicator &clientServerCommunicator) {
+    tcpHandler = &tcpHandlerCommunicator;
+    client = &clientServerCommunicator;
     udpSocket.bind(sf::Socket::AnyPort);
-    serverUdpPort = udpSocket.getLocalPort();
-    messageContainer->serverUdpPort = serverUdpPort;
     udpSocket.setBlocking(false);
 }
 
 ServerBaseClass::~ServerBaseClass() {
-    udpSocket.unbind();
 }
 
-bool ServerBaseClass::baseClassUpdate() {
-    bool shouldStop = checkForMessages();
-    if(shouldStop) {
-        return true;
+void ServerBaseClass::checkNetworkForMessages() {
+    // check for TCP messages from local client
+    std::vector<std::string> messages;
+    client->lock.lock();
+    for(int i=0; i<client->tcpMessagesToServer.size(); i++) {
+        messages.push_back(client->tcpMessagesToServer[i]);
     }
-    update();
-    return false;
-}
-
-bool ServerBaseClass::checkForMessages() {
-    if(messageContainer->startClosing > 0) {
-        messageContainer->startClosing++;
-        return true;
+    client->tcpMessagesToServer.clear();
+    client->lock.unlock();
+    for(int i=0; i<messages.size(); i++) {
+        receivedTcpMessage(messages[i], nullptr);
     }
+    messages.clear();
     
-    // check udp socket for messages
+    // check for TCP messages from remote clients
+    std::vector<sf::TcpSocket*> sockets;
+    tcpHandler->lock.lock();
+    for(int i=0; i<tcpHandler->messagesFromClients.size(); i++) {
+        messages.push_back(tcpHandler->messagesFromClients[i]);
+        sockets.push_back(tcpHandler->socketsFromClients[i]);
+    }
+    tcpHandler->messagesFromClients.clear();
+    tcpHandler->socketsFromClients.clear();
+    tcpHandler->lock.unlock();
+    for(int i=0; i<messages.size(); i++) {
+        receivedTcpMessage(messages[i], sockets[i]);
+    }
+    messages.clear();
+    
+    // check for UDP messages from local client
+    client->lock.lock();
+    for(int i=0; i<client->udpMessagesToServer.size(); i++) {
+        messages.push_back(client->udpMessagesToServer[i]);
+    }
+    client->udpMessagesToServer.clear();
+    client->lock.unlock();
+    for(int i=0; i<messages.size(); i++) {
+        receivedUdpMessage(messages[i], "0.0.0.0", 0);
+    }
+    messages.clear();
+    
+    // check for UDP messages from remote clients
     char buffer[1024];
     char *begin = buffer;
     char *end = begin + sizeof(buffer);
@@ -48,39 +72,30 @@ bool ServerBaseClass::checkForMessages() {
     if(message != "") {
         receivedUdpMessage(message, sender, port);
     }
-    
-    // check tcp socket for message
-    std::vector<std::string> messagesToProcess;
-    std::vector<sf::TcpSocket*> socketsToProcess;
-    messageContainer->lock.lock();
-    if(messageContainer->messagesFromClients.size() > 0) {
-        while(messageContainer->messagesFromClients.size() > 0) {
-            messagesToProcess.push_back(messageContainer->messagesFromClients[0]);
-            messageContainer->messagesFromClients.erase(messageContainer->messagesFromClients.begin(), messageContainer->messagesFromClients.begin()+1);
-            socketsToProcess.push_back(messageContainer->socketsFromClients[0]);
-            messageContainer->socketsFromClients.erase(messageContainer->socketsFromClients.begin(), messageContainer->socketsFromClients.begin()+1);
-        }
-    }
-    messageContainer->lock.unlock();
-    for(int i=0; i<messagesToProcess.size(); i++) {
-        receivedTcpMessage(messagesToProcess[i], socketsToProcess[i]);
-    }
-    return false;
 }
 
-void ServerBaseClass::sendUdpMessage(std::string message, sf::IpAddress address, unsigned int port) {
-    char m[message.size()];
-    for(int i = 0; i < message.size(); i++) {
-        m[i] = message[i];
+void ServerBaseClass::sendTcp(std::string message, sf::TcpSocket *socket) {
+    if(socket == nullptr) {
+        // send TCP message to local client
+        client->lock.lock();
+        client->tcpMessagesFromServer.push_back(message);
+        client->lock.unlock();
     }
-    udpSocket.send(m, message.size(), address, port);
+    else {
+        // send TCP message remote client
+        socket->send(message.c_str(), message.size());
+    }
 }
 
-void ServerBaseClass::sendTcpMessage(std::string message, sf::TcpSocket *socket) {
-    char m[message.size()];
-    for(int i = 0; i < message.size(); i++) {
-        m[i] = message[i];
+void ServerBaseClass::sendUdp(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient) {
+    if(ipAddressOfClient == "0.0.0.0" || ipAddressOfClient == sf::IpAddress::getLocalAddress()) {
+        // send UDP message to local client
+        client->lock.lock();
+        client->udpMessagesFromServer.push_back(message);
+        client->lock.unlock();
     }
-    socket->send(m, message.size());
+    else {
+        // send UDP message to remote client
+        udpSocket.send(message.c_str(), message.size(), ipAddressOfClient, portOfClient);
+    }
 }
-

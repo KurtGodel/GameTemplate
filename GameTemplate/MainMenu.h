@@ -14,9 +14,9 @@
 #include <vector>
 #include <iostream>
 #include "ResourcePath.hpp"
-#include "ClientBaseClass.h"
 #include "MenuPage.h"
 #include "TextBox.h"
+#include "AppBaseClass.h"
 
 enum MainMenuPageName {
     MainMenuPageName_Home = 0,
@@ -27,8 +27,7 @@ enum MainMenuPageName {
 
 class MainMenu {
 public:
-    MainMenu(sf::RenderWindow &w);
-    MainMenu(sf::RenderWindow &w, ClientBaseClass *parentApp);
+    MainMenu(sf::RenderWindow &w, AppBaseClass &app);
     void think();
     void draw();
     void mouseMove(sf::Event::MouseMoveEvent event);
@@ -42,11 +41,11 @@ private:
     std::vector<MenuPage> pages;
     sf::Texture buttonTexture;
     sf::Font font;
+    AppBaseClass *parentApp;
     
     sf::RenderWindow *window;
     
     MainMenuPageName pageNum = MainMenuPageName_Home;
-    ClientBaseClass *app;
     
     void buttonClicked(int index);
     int frameCounter = 0;

@@ -19,23 +19,43 @@
 
 // Here is a small helper for you ! Have a look.
 #include "ResourcePath.hpp"
-
+#include "App.h"
+#include "TcpHandler.h"
 #include "Client.h"
 #include "Server.h"
-#include "ServerSocketController.h"
-#include "TcpMessageContainer.h"
 
-void* startServer(void* input) {
-    Server server(*(TcpMessageContainer*) input);
-    bool shouldStop = false;
-    while (!shouldStop) {
-        shouldStop = server.baseClassUpdate();
+struct ClientServerTcpCommunicatorPair {
+    ClientServerCommunicator *clientServerCommunicator;
+    TcpHandlerCommunicator *tcpHandlerCommunicator;
+};
+
+struct ClientServerCommunicatorPair {
+    ClientServerCommunicator *clientServerCommunicator;
+    ClientCommunicator *clientCommunicator;
+};
+
+void* startServerThread(void* input) {
+    ClientServerTcpCommunicatorPair *clientServerTcpCommunicatorPair = (ClientServerTcpCommunicatorPair*) input;
+    Server server(*clientServerTcpCommunicatorPair->tcpHandlerCommunicator, *clientServerTcpCommunicatorPair->clientServerCommunicator);
+    while (true) {
+        server.checkNetworkForMessages();
+        server.run();
     }
 }
 
-void* startServerSocketController(void* input) {
-    ServerSocketController serverSocketController(*(TcpMessageContainer*) input);
-    serverSocketController.run();
+void* startClientThread(void* input) {
+    ClientServerCommunicatorPair *clientServerCommunicatorPair = (ClientServerCommunicatorPair*) input;
+    Client client(*clientServerCommunicatorPair->clientServerCommunicator, *clientServerCommunicatorPair->clientCommunicator);
+    while (true) {
+        client.run();
+    }
+}
+
+void* startTcpListenerThread(void* input) {
+    TcpHandler tcpHandler(*(TcpHandlerCommunicator*) input);
+    while (true) {
+        tcpHandler.run();
+    }
 }
 
 int main(int, char const**)
@@ -52,74 +72,77 @@ int main(int, char const**)
     }
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
     
-    TcpMessageContainer tcpMessageContainer;
+    TcpHandlerCommunicator tcpHandlerCommunicator;
+    ClientCommunicator clientCommunicator;
+    ClientServerCommunicator clientServerCommunicator;
+    ClientServerTcpCommunicatorPair clientServerTcpCommunicatorPair;
+    clientServerTcpCommunicatorPair.clientServerCommunicator = &clientServerCommunicator;
+    clientServerTcpCommunicatorPair.tcpHandlerCommunicator = &tcpHandlerCommunicator;
+    ClientServerCommunicatorPair clientServerCommunicatorPair;
+    clientServerCommunicatorPair.clientCommunicator = &clientCommunicator;
+    clientServerCommunicatorPair.clientServerCommunicator = &clientServerCommunicator;
     
-    pthread_t startServerSocketControllerThread;
-    pthread_create(&startServerSocketControllerThread, NULL, startServerSocketController, (void *)(&tcpMessageContainer));
     
-    // wait 0.1 seconds for the server to be set up
-    struct timespec tim, tim2;
-    tim.tv_sec = 0;
-    tim.tv_nsec = 100000;
-    tim.tv_nsec *= 1000;
-    nanosleep(&tim , &tim2);
+    pthread_t tcpListenerThread;
+    pthread_create(&tcpListenerThread, NULL, startTcpListenerThread, (void *)(&tcpHandlerCommunicator));
     
     pthread_t serverThread;
-    pthread_create(&serverThread, NULL, startServer, (void *)(&tcpMessageContainer));
+    pthread_create(&serverThread, NULL, startServerThread, (void *)(&clientServerTcpCommunicatorPair));
     
-    // wait 0.1 seconds for the server to be set up
-    nanosleep(&tim , &tim2);
+    pthread_t clientThread;
+    pthread_create(&clientThread, NULL, startClientThread, (void *)(&clientServerCommunicatorPair));
     
-    Client client(window, tcpMessageContainer);
+    App app(window, clientCommunicator);
     
     // Start the game loop
     while(window.isOpen())
     {
-        if(tcpMessageContainer.startClosing >= 2) {
-            window.close();
-        }
         // Process events
         sf::Event event;
         while (window.pollEvent(event))
         {
             if(event.type == sf::Event::Closed) {
-                tcpMessageContainer.startClosing = 1;
+                window.close();
             }
             else if(event.type == sf::Event::MouseMoved) {
-                client.mouseMove(event.mouseMove);
+                app.mouseMove(event.mouseMove);
             }
             else if(event.type == sf::Event::MouseButtonPressed) {
-                client.mouseDown(event.mouseButton);
+                app.mouseDown(event.mouseButton);
             }
             else if(event.type == sf::Event::MouseButtonReleased) {
-                client.mouseUp(event.mouseButton);
+                app.mouseUp(event.mouseButton);
             }
             else if(event.type == sf::Event::KeyPressed) {
-                client.keyDown(event.key);
+                app.keyDown(event.key);
             }
             else if(event.type == sf::Event::KeyReleased) {
-                client.keyUp(event.key);
+                app.keyUp(event.key);
             }
             else if(event.type == sf::Event::TextEntered) {
-                client.textEntered(event.text);
+                app.textEntered(event.text);
             }
         }
         
-        // check for messages from server
-        client.checkForReceivedSocketMessages();
+        // syncronize threads
+        app.checkNetworkForMessages();
         
-        // do calculations
-        client.think();
+        // do calculation
+        app.think();
 
         // Clear screen
         window.clear();
         
         // Render screen
-        client.draw();
+        app.draw();
 
         // Update the window
         window.display();
     }
+    
+    pthread_cancel(clientThread);
+    pthread_cancel(serverThread);
+    pthread_cancel(tcpListenerThread);
     
     return EXIT_SUCCESS;
 }

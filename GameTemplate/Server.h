@@ -2,7 +2,7 @@
 //  Server.h
 //  GameTemplate
 //
-//  Created by Thomas Redding on 5/15/15.
+//  Created by Thomas Redding on 5/19/15.
 //  Copyright (c) 2015 Thomas Redding. All rights reserved.
 //
 
@@ -10,20 +10,16 @@
 #define __GameTemplate__Server__
 
 #include <stdio.h>
-#include <iostream>
-#include <time.h>
-#include <unordered_map>
-#include <SFML/Network.hpp>
 #include "ServerBaseClass.h"
 
 class Server : public ServerBaseClass {
 public:
-    Server(TcpMessageContainer &tcpMessageContainer);
-    void update();
-    
+    Server(TcpHandlerCommunicator &tcpHandlerCommunicator, ClientServerCommunicator &clientServerCommunicator);
+    ~Server();
+    void run();
 protected:
-    void receivedUdpMessage(std::string message, sf::IpAddress address, unsigned short port);
     void receivedTcpMessage(std::string message, sf::TcpSocket *socket);
+    void receivedUdpMessage(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient);
 };
 
 #endif /* defined(__GameTemplate__Server__) */

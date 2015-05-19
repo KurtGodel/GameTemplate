@@ -8,14 +8,9 @@
 
 #include "MainMenu.h"
 
-MainMenu::MainMenu(sf::RenderWindow &w) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), udpPortTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
-    std::cout << "Error: Main Menu not constructed with access to parent app";
-    w.close();
-}
-
-MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), udpPortTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
+MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), udpPortTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
     window = &w;
-    app = parentApp;
+    parentApp = &app;
     if(!buttonTexture.loadFromFile(resourcePath() + "button.png")) {
         std::cout << "Error: Main Menu failed to load button texture";
         w.close();
@@ -27,6 +22,7 @@ MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTe
         w.close();
         return;
     }
+    
     
     sf::Vector2u screenSize = window->getSize();
     
@@ -124,14 +120,6 @@ MainMenu::MainMenu(sf::RenderWindow &w, ClientBaseClass* parentApp) : usernameTe
 
 void MainMenu::think() {
     if(pageNum == MainMenuPageName_MultiplayerServer) {
-        std::string ip = sf::IpAddress::getLocalAddress().toString();
-        pages[3].labels[1].setString("IP: " + ip);
-        
-        std::string portNum = app->sendMeMessage("get my server port");
-        pages[3].labels[2].setString("TCP Port: " + portNum);
-        
-        portNum = app->sendMeMessage("get my server udp port");
-        pages[3].labels[3].setString("UDP Port: " + portNum);
     }
 }
 
@@ -195,7 +183,7 @@ void MainMenu::buttonClicked(int index) {
             pageNum = MainMenuPageName_Home;
         }
         else if(pages[pageNum].buttons[index].label == "Sign In") {
-            app->sendMeMessage("Login To Server\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue() + "\n" + udpPortTextBox.getValue());
+            parentApp->sendMeMessage("Login To Server\n" + usernameTextBox.getValue() + "\n" + serverIpTextBox.getValue() + "\n" + portTextBox.getValue() + "\n" + udpPortTextBox.getValue());
         }
     }
     else if(pageNum == MainMenuPageName_SinglePlayer) {

@@ -2,7 +2,7 @@
 //  Client.h
 //  GameTemplate
 //
-//  Created by Thomas Redding on 5/15/15.
+//  Created by Thomas Redding on 5/19/15.
 //  Copyright (c) 2015 Thomas Redding. All rights reserved.
 //
 
@@ -10,32 +10,29 @@
 #define __GameTemplate__Client__
 
 #include <stdio.h>
-#include <sstream>
-#include <SFML/Graphics.hpp>
-#include "ClientBaseClass.h"
-#include "MainMenu.h"
-#include "TcpMessageContainer.h"
+#include <iostream>
+#include "ClientCommunicator.h"
+#include "ClientServerCommunicator.h"
 
-class Client : public ClientBaseClass {
+class Client {
 public:
-    Client(sf::RenderWindow &w, TcpMessageContainer &tcpMessageContainer);
-    void think();
-    void draw();
-    void mouseMove(sf::Event::MouseMoveEvent event);
-    void mouseDown(sf::Event::MouseButtonEvent event);
-    void mouseUp(sf::Event::MouseButtonEvent event);
-    void keyDown(sf::Event::KeyEvent event);
-    void keyUp(sf::Event::KeyEvent event);
-    void textEntered(sf::Event::TextEvent event);
-    void receivedUdpMessage(std::string message);
-    void receivedTcpMessage(std::string message);
-    std::string sendMeMessage(std::string message);
+    Client(ClientServerCommunicator &clientServerCommunicator, ClientCommunicator &clientCommunicator);
+    ~Client();
+    void run();
 private:
-    sf::RenderWindow *window;
-    MainMenu mainMenu;
-    bool inMainMenu = true;
+    bool connectTcpToServer(sf::IpAddress ipAddressOfServer, unsigned short portOfServer);
+    void sendTcpMessage(std::string message);
+    void sendUdpMessage(std::string message);
     
-    std::vector<std::string> split(const std::string s, char delim);
+    ClientCommunicator *app;
+    ClientServerCommunicator *server;
+    
+    sf::TcpSocket tcpSocket;
+    sf::UdpSocket udpSocket;
+    
+    sf::IpAddress ipAddressOfServer = "0.0.0.0";
+    unsigned short tcpPortOfServer = 0;
+    unsigned short udpPortOfServer = 0;
 };
 
 #endif /* defined(__GameTemplate__Client__) */
