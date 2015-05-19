@@ -16,6 +16,9 @@ App::~App() {
 }
 
 void App::think() {
+    // keep sending "george"
+    std::cout << "I";
+    sendUdp("fred");
 }
 
 void App::draw() {
@@ -46,14 +49,11 @@ void App::textEntered(sf::Event::TextEvent event) {
 }
 
 void App::receivedTcpMessage(std::string message) {
-    std::cout << "CR{TCP:" << message << "}";
-    
-    sendTcp("alpha");
+    // todo
 }
 
 void App::receivedUdpMessage(std::string message) {
-    std::cout << "CR{UDP:" << message << "}";
-    sendTcp("beta");
+    // todo
 }
 
 void App::update() {

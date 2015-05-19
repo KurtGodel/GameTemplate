@@ -10,6 +10,7 @@
 #define __GameTemplate__Server__
 
 #include <stdio.h>
+#include <iostream>
 #include "ServerBaseClass.h"
 
 class Server : public ServerBaseClass {

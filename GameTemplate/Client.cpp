@@ -40,6 +40,7 @@ void Client::run() {
     for(int i=0; i<app->udpMessagesToServer.size(); i++) {
         messages.push_back(app->udpMessagesToServer[i]);
     }
+    app->udpMessagesToServer.clear();
     app->lock.unlock();
     for(int i=0; i<messages.size(); i++) {
         sendUdpMessage(messages[i]);
@@ -51,6 +52,7 @@ void Client::run() {
     for(int i=0; i<app->tcpMessagesToServer.size(); i++) {
         messages.push_back(app->tcpMessagesToServer[i]);
     }
+    app->tcpMessagesToServer.clear();
     app->lock.unlock();
     for(int i=0; i<messages.size(); i++) {
         sendTcpMessage(messages[i]);
@@ -67,6 +69,7 @@ void Client::run() {
     for(int i=0; i<messages.size(); i++) {
         app->udpMessagesFromServer.push_back(messages[i]);
     }
+    server->udpMessagesFromServer.clear();
     app->lock.unlock();
     messages.clear();
     
@@ -75,6 +78,7 @@ void Client::run() {
     for(int i=0; i<server->tcpMessagesFromServer.size(); i++) {
         messages.push_back(server->tcpMessagesFromServer[i]);
     }
+    server->tcpMessagesFromServer.clear();
     server->lock.unlock();
     app->lock.lock();
     for(int i=0; i<messages.size(); i++) {
@@ -93,9 +97,11 @@ void Client::run() {
     unsigned short port;
     udpSocket.receive(buffer, sizeof(buffer), received, sender, port);
     std::string message(buffer);
-    app->lock.lock();
-    app->udpMessagesFromServer.push_back(message);
-    app->lock.unlock();
+    if(message != "") {
+        app->lock.lock();
+        app->udpMessagesFromServer.push_back(message);
+        app->lock.unlock();
+    }
     
     
     // check tcp messages from remote server
@@ -104,16 +110,17 @@ void Client::run() {
     std::fill(begin, end, 0);
     tcpSocket.receive(buffer, sizeof(buffer), received);
     message = std::string(buffer);
-    app->lock.lock();
-    app->tcpMessagesFromServer.push_back(message);
-    app->lock.unlock();
+    if(message != "") {
+        app->lock.lock();
+        app->tcpMessagesFromServer.push_back(message);
+        app->lock.unlock();
+    }
     
     
-    // sleep for 1 millisecond
+    // sleep for 1 second
     struct timespec tim, tim2;
-    tim.tv_sec = 0;
-    tim.tv_nsec = 1000000;
-    tim.tv_nsec *= 1000;
+    tim.tv_sec = 1;
+    tim.tv_nsec = 0;
     nanosleep(&tim , &tim2);
 }
 

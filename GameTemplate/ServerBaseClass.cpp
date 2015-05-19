@@ -33,6 +33,7 @@ void ServerBaseClass::checkNetworkForMessages() {
     messages.clear();
     
     // check for TCP messages from remote clients
+    // TCP messages from remote clients are checked by the TcpHandler
     std::vector<sf::TcpSocket*> sockets;
     tcpHandler->lock.lock();
     for(int i=0; i<tcpHandler->messagesFromClients.size(); i++) {
