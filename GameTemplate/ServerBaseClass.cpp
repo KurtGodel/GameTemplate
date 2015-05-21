@@ -85,7 +85,9 @@ void ServerBaseClass::sendTcp(std::string message, sf::TcpSocket *socket) {
     }
     else {
         // send TCP message remote client
-        socket->send(message.c_str(), message.size());
+        sf::Packet packet;
+        packet << message;
+        socket->send(packet);
     }
 }
 

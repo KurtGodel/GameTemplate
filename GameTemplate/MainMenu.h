@@ -38,7 +38,7 @@ public:
     void keyUp(sf::Event::KeyEvent event);
     void textEntered(sf::Event::TextEvent event);
     void sendMessage(std::string message);
-    void sendMeResultOfClientConnect(bool didConnect);
+    void sendMeResultOfClientConnect(std::string message);
 private:
     std::vector<MenuPage> pages;
     sf::Texture buttonTexture;
@@ -55,6 +55,7 @@ private:
     TextBox usernameTextBox;
     TextBox serverIpTextBox;
     TextBox portTextBox;
+    TextBox chatTextBox;
 };
 
 

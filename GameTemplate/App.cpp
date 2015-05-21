@@ -9,7 +9,7 @@
 #include "App.h"
 
 App::App(sf::RenderWindow &w, ClientCommunicator &clientCommunicator) : mainMenu(w, *this), AppBaseClass(clientCommunicator) {
-    connectToServer("0.0.0.0", 0);
+    connectToServer("", "0.0.0.0", 0);
 }
 
 App::~App() {
@@ -49,13 +49,11 @@ void App::textEntered(sf::Event::TextEvent event) {
 }
 
 void App::receivedTcpMessage(std::string message) {
-    if(message == "DID CONNECT") {
-        mainMenu.sendMeResultOfClientConnect(true);
-    }
-    else if(message == "DID NOT CONNECT") {
-        mainMenu.sendMeResultOfClientConnect(false);
+    if(message == "DID CONNECT" || message == "DID NOT CONNECT" || message == "USERNAME NOT UNIQUE") {
+        mainMenu.sendMeResultOfClientConnect(message);
     }
     else {
+        // do something else with it
     }
 }
 
@@ -76,14 +74,17 @@ std::string App::sendMeMessage(std::string message) {
     }
     else if(arr[0] == "Login To Server") {
         if(arr.size() == 4) {
-            std::string username = arr[1];
+            username = arr[1];
             sf::IpAddress ipAddress(arr[2]);
             unsigned short port = stoi(arr[3]);
-            connectToServer(ipAddress, port);
+            connectToServer(username, ipAddress, port);
         }
     }
     else if(arr[0] == "Log Out") {
-        connectToServer("0.0.0.0", 0);
+        connectToServer("", "0.0.0.0", 0);
+    }
+    else if(arr[0] == "Chat Message") {
+        // sendTcp(message);
     }
 }
 

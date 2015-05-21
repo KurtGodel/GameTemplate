@@ -34,6 +34,7 @@ public:
 private:
     MainMenu mainMenu;
     std::vector<std::string> split(const std::string s, char delim);
+    std::string username = "";
 };
 
 #endif /* defined(__GameTemplate__App__) */

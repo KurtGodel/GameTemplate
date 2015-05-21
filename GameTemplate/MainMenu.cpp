@@ -8,7 +8,7 @@
 
 #include "MainMenu.h"
 
-MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2) {
+MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)), serverIpTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), portTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 30), 2), chatTextBox(&font, sf::Vector2f(0, 0), sf::Vector2f(100, 50)) {
     window = &w;
     parentApp = &app;
     if(!buttonTexture.loadFromFile(resourcePath() + "button.png")) {
@@ -94,7 +94,7 @@ MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&fo
     pages[2].buttons[0].x = 0;
     pages[2].buttons[0].y = 0;
     
-    //Multiplayer Server
+    // Multiplayer Server
     pages.push_back(MenuPage());
     pages[3].labels.push_back(sf::Text("Multiplayer Server", font, 100));
     rect = pages[3].labels[0].getGlobalBounds();
@@ -110,6 +110,7 @@ MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&fo
     rect = pages[3].labels[2].getGlobalBounds();
     pages[3].labels[2].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.y/2 - rect.height/2.0 + 60.0);
     
+    // Matchmaking
     pages.push_back(MenuPage());
     pages[4].labels.push_back(sf::Text("Matchmaking", font, 100));
     rect = pages[4].labels[0].getGlobalBounds();
@@ -118,6 +119,9 @@ MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&fo
     pages[4].buttons[0].size = screenSize.x/3.0;
     pages[4].buttons[0].x = 0;
     pages[4].buttons[0].y = 0;
+    chatTextBox.setSize(screenSize.x/4.0, screenSize.x/40.0);
+    chatTextBox.setPosition(3.0*screenSize.x/4.0, screenSize.y - screenSize.x/40.0);
+    chatTextBox.maxCharacterLength = 20;
 }
 
 void MainMenu::think() {
@@ -148,6 +152,14 @@ void MainMenu::draw() {
         serverIpTextBox.unfocus();
         portTextBox.unfocus();
     }
+    
+    if(pageNum == MainMenuPageName_Matchmaking) {
+        chatTextBox.render(window);
+    }
+    else {
+        chatTextBox.unfocus();
+    }
+    
     frameCounter++;
 }
 
@@ -167,6 +179,9 @@ void MainMenu::mouseDown(sf::Event::MouseButtonEvent event) {
         usernameTextBox.mouseButtonPressed(event);
         serverIpTextBox.mouseButtonPressed(event);
         portTextBox.mouseButtonPressed(event);
+    }
+    else if(pageNum == MainMenuPageName_Matchmaking) {
+        chatTextBox.mouseButtonPressed(event);
     }
 }
 
@@ -218,6 +233,15 @@ void MainMenu::keyDown(sf::Event::KeyEvent event) {
         serverIpTextBox.keyPressed(event);
         portTextBox.keyPressed(event);
     }
+    else if(pageNum == MainMenuPageName_Matchmaking) {
+        if(chatTextBox.isFocused() && event.code == 58 && chatTextBox.getValue() != "") {
+            // send chat to server
+            parentApp->sendMeMessage("Chat Message\n" + chatTextBox.getValue());
+        }
+        else {
+            chatTextBox.keyPressed(event);
+        }
+    }
 }
 
 void MainMenu::keyUp(sf::Event::KeyEvent event) {
@@ -229,17 +253,26 @@ void MainMenu::textEntered(sf::Event::TextEvent event) {
         serverIpTextBox.textEntered(event.unicode);
         portTextBox.textEntered(event.unicode);
     }
+    else if(pageNum == MainMenuPageName_Matchmaking) {
+        chatTextBox.textEntered(event.unicode);
+    }
 }
 
 void MainMenu::sendMessage(std::string message) {
 }
 
-void MainMenu::sendMeResultOfClientConnect(bool didConnect) {
-    if(didConnect) {
+void MainMenu::sendMeResultOfClientConnect(std::string message) {
+    if(message == "DID CONNECT") {
         pageNum = MainMenuPageName_Matchmaking;
         pages[1].labels[4].setString("");
     }
-    else {
+    else if(message == "USERNAME NOT UNIQUE") {
+        pages[1].labels[4].setString("Username Already in Use.");
+    }
+    else if(message == "DID NOT CONNECT") {
         pages[1].labels[4].setString("Connection Failed");
+    }
+    else {
+        // should never happen
     }
 }

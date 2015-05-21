@@ -16,8 +16,9 @@ AppBaseClass::~AppBaseClass() {
     //
 }
 
-void AppBaseClass::connectToServer(sf::IpAddress ipAddressOfServer, unsigned short tcpPortOfServer) {
+void AppBaseClass::connectToServer(std::string username, sf::IpAddress ipAddressOfServer, unsigned short tcpPortOfServer) {
     communicator->lock.lock();
+    communicator->connectToServerUsername.push_back(username);
     communicator->connectToServerIp.push_back(ipAddressOfServer);
     communicator->connectToServerTcpPort.push_back(tcpPortOfServer);
     communicator->lock.unlock();

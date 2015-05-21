@@ -10,6 +10,7 @@
 #define __GameTemplate__Server__
 
 #include <stdio.h>
+#include <sstream>
 #include <iostream>
 #include "ServerBaseClass.h"
 
@@ -21,6 +22,9 @@ public:
 protected:
     void receivedTcpMessage(std::string message, sf::TcpSocket *socket);
     void receivedUdpMessage(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient);
+private:
+    std::vector<std::string> split(const std::string s, char delim);
+    bool isUsernameUnique(std::string name);
 };
 
 #endif /* defined(__GameTemplate__Server__) */

@@ -21,7 +21,7 @@ public:
     void checkNetworkForMessages();
     virtual std::string sendMeMessage(std::string message) = 0;
 protected:
-    void connectToServer(sf::IpAddress ipAddressOfServer, unsigned short tcpPortOfServer);
+    void connectToServer(std::string username, sf::IpAddress ipAddressOfServer, unsigned short tcpPortOfServer);
     void sendUdp(std::string message);
     void sendTcp(std::string message);
     virtual void receivedTcpMessage(std::string message) = 0;

@@ -25,11 +25,13 @@ Client::~Client() {
 void Client::run() {
     // check connect requests
     app->lock.lock();
-    if(app->connectToServerIp.size() > 0 && app->connectToServerTcpPort.size() > 0) {
+    if(app->connectToServerIp.size() > 0 && app->connectToServerTcpPort.size() > 0 && app->connectToServerUsername.size() > 0) {
+        username = app->connectToServerUsername[app->connectToServerUsername.size()-1];
         sf::IpAddress addr = app->connectToServerIp[app->connectToServerIp.size()-1];
         unsigned short port = app->connectToServerTcpPort[app->connectToServerTcpPort.size()-1];
         app->connectToServerIp.clear();
         app->connectToServerTcpPort.clear();
+        app->connectToServerUsername.clear();
         app->lock.unlock();
         bool didSucceed = connectTcpToServer(addr, port);
         if(didSucceed) {
@@ -123,11 +125,10 @@ void Client::run() {
     
     
     // check tcp messages from remote server
-    begin = buffer;
-    end = begin + sizeof(buffer);
-    std::fill(begin, end, 0);
-    tcpSocket.receive(buffer, sizeof(buffer), received);
-    message = std::string(buffer);
+    sf::Packet packet;
+    tcpSocket.receive(packet);
+    message = "";
+    packet >> message;
     if(message != "") {
         std::vector<std::string> arr = split(message, '\n');
         if(arr.size() == 2 && arr[0] == "Server UDP Port") {
@@ -135,6 +136,13 @@ void Client::run() {
             udpPortOfServer = stoi(arr[1]);
             app->lock.lock();
             app->tcpMessagesFromServer.push_back("DID CONNECT");
+            app->lock.unlock();
+        }
+        else if(arr.size() == 3 && arr[0] == "Username Not Unique") {
+            // finish up connection
+            udpPortOfServer = stoi(arr[1]);
+            app->lock.lock();
+            app->tcpMessagesFromServer.push_back("USERNAME NOT UNIQUE");
             app->lock.unlock();
         }
         else {
@@ -245,7 +253,11 @@ void Client::sendUdpMessage(std::string message) {
         // send message to remote server
         if(udpPortOfServer == 0) {
             // we don't know the server port
-            std::string newMessage = "Give UDP Socket";
+            /*
+             Give UDP Socket
+             {username}
+            */
+            std::string newMessage = "Give UDP Socket\n" + username;
             sf::Packet packet;
             packet << newMessage;
             tcpSocket.send(packet);

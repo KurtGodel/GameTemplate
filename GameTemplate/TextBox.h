@@ -44,6 +44,7 @@ public:
     // optional hook-up
     void focus();
     void unfocus();
+    bool isFocused();
     
     std::string getValue();
     std::string setValue(std::string newValue);

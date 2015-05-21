@@ -173,6 +173,9 @@ void TextBox::textEntered(int key)
 
 void TextBox::keyPressed(sf::Event::KeyEvent key)
 {
+    if(!focused) {
+        return;
+    }
     if(key.code == sf::Keyboard::Left)
     {
         if(cursorSpot>0)
@@ -603,6 +606,10 @@ void TextBox::focus()
 void TextBox::unfocus()
 {
     focused = false;
+}
+
+bool TextBox::isFocused() {
+    return focused;
 }
 
 void TextBox::center(sf::Vector2u screenSize) {

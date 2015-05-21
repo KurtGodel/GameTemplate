@@ -27,6 +27,7 @@ void TcpHandler::run() {
         // Make the selector wait for data on any socket
         if(selector.wait())
         {
+            std::cout << "Q";
             // Test the listener
             if(selector.isReady(listener))
             {

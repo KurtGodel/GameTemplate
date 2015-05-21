@@ -35,6 +35,7 @@ private:
     sf::IpAddress ipAddressOfServer = "0.0.0.0";
     unsigned short tcpPortOfServer = 0;
     unsigned short udpPortOfServer = 0;
+    std::string username;
 };
 
 #endif /* defined(__GameTemplate__Client__) */
