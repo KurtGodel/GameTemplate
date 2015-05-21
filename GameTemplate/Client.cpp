@@ -152,30 +152,12 @@ void Client::run() {
             app->lock.unlock();
         }
     }
-    /*
-    std::cout << "{";
-    std::cout << tcpSocket.getLocalPort();
-    std::cout << ", ";
-    std::cout << tcpSocket.getRemoteAddress();
-    std::cout << ", ";
-    std::cout << tcpSocket.getRemotePort();
-    std::cout << ", ";
-    std::cout << udpSocket.getLocalPort();
-    std::cout << "}";
-    std::cout << "{";
-    std::cout << ipAddressOfServer;
-    std::cout << ", ";
-    std::cout << tcpPortOfServer;
-    std::cout << ", ";
-    std::cout << udpPortOfServer;
-    std::cout << "}\n";
-    */
     
-    
-    // sleep for 1 second
+    // sleep for 100 milliseconds
     struct timespec tim, tim2;
-    tim.tv_sec = 1;
-    tim.tv_nsec = 0;
+    tim.tv_sec = 0;
+    tim.tv_nsec = 100;
+    tim.tv_nsec *= 1000000;
     nanosleep(&tim , &tim2);
 }
 

@@ -83,7 +83,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		28A02A1C1B0BBA4B00612E95 /* Tenatively Done */ = {
+		28A02A1C1B0BBA4B00612E95 /* Ignore Me */ = {
 			isa = PBXGroup;
 			children = (
 				28F2AD3C1B0B71F600459DEE /* Client.cpp */,
@@ -98,7 +98,7 @@
 				28A01FC71B0AC6990030425F /* TcpHandler.cpp */,
 				28A01FC81B0AC6990030425F /* TcpHandler.h */,
 			);
-			name = "Tenatively Done";
+			name = "Ignore Me";
 			sourceTree = "<group>";
 		};
 		28BE434C1B067D09001D5E57 = {
@@ -127,8 +127,8 @@
 				28A02A211B0BD96D00612E95 /* Server.h */,
 				28A01FC11B0AC1080030425F /* App.cpp */,
 				28A01FC21B0AC1080030425F /* App.h */,
-				28A02A1C1B0BBA4B00612E95 /* Tenatively Done */,
 				28F18F421B06BF36005A5B43 /* Menu */,
+				28A02A1C1B0BBA4B00612E95 /* Ignore Me */,
 				28BE43601B067D09001D5E57 /* Resources */,
 				28BE43591B067D09001D5E57 /* Supporting Files */,
 			);

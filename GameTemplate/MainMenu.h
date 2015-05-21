@@ -23,7 +23,8 @@ enum MainMenuPageName {
     MainMenuPageName_MultiplayerClient = 1,
     MainMenuPageName_SinglePlayer = 2,
     MainMenuPageName_MultiplayerServer = 3,
-    MainMenuPageName_Matchmaking = 4
+    MainMenuPageName_Matchmaking = 4,
+    MainMenuPageName_ServerMatchmaking = 5
 };
 
 class MainMenu {
@@ -39,6 +40,7 @@ public:
     void textEntered(sf::Event::TextEvent event);
     void sendMessage(std::string message);
     void sendMeResultOfClientConnect(std::string message);
+    void updateChat(std::vector<std::string> *chatMessages);
 private:
     std::vector<MenuPage> pages;
     sf::Texture buttonTexture;

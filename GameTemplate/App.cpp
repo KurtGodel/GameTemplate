@@ -54,6 +54,14 @@ void App::receivedTcpMessage(std::string message) {
     }
     else {
         // do something else with it
+        std::vector<std::string> arr = split(message, '\n');
+        if(arr.size() == 0) {
+            return;
+        }
+        if(arr[0] == "CHAT MESSAGE" && arr.size() == 2) {
+            chat.push_back(arr[1]);
+            mainMenu.updateChat(&chat);
+        }
     }
 }
 
@@ -84,7 +92,7 @@ std::string App::sendMeMessage(std::string message) {
         connectToServer("", "0.0.0.0", 0);
     }
     else if(arr[0] == "Chat Message") {
-        // sendTcp(message);
+        sendTcp(message);
     }
 }
 

@@ -596,6 +596,7 @@ std::string TextBox::getValue()
 
 std::string TextBox::setValue(std::string newValue) {
     str = newValue;
+    cursorSpot = str.length();
 }
 
 void TextBox::focus()

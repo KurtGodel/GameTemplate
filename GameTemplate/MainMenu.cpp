@@ -109,19 +109,35 @@ MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&fo
     pages[3].labels.push_back(sf::Text("Server Port: ?????", font, 50));
     rect = pages[3].labels[2].getGlobalBounds();
     pages[3].labels[2].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.y/2 - rect.height/2.0 + 60.0);
+    pages[3].buttons.push_back(MenuButton("Matchmaking", &buttonTexture, &font));
+    pages[3].buttons[1].center(screenSize);
+    pages[3].buttons[1].y += rect.height/2.0 + 120;
     
     // Matchmaking
     pages.push_back(MenuPage());
-    pages[4].labels.push_back(sf::Text("Matchmaking", font, 100));
+    pages[4].labels.push_back(sf::Text("Matchmaking (C)", font, 100));
     rect = pages[4].labels[0].getGlobalBounds();
-    pages[4].labels[0].setPosition(screenSize.x/2.0 - rect.width/2.0, screenSize.x/10.0);
+    pages[4].labels[0].setPosition(screenSize.x/3.0 - rect.width/2.0, screenSize.x/10.0);
+    pages[4].labels.push_back(sf::Text("", font, 16));
     pages[4].buttons.push_back(MenuButton("Log Out", &buttonTexture, &font));
     pages[4].buttons[0].size = screenSize.x/3.0;
     pages[4].buttons[0].x = 0;
     pages[4].buttons[0].y = 0;
-    chatTextBox.setSize(screenSize.x/4.0, screenSize.x/40.0);
-    chatTextBox.setPosition(3.0*screenSize.x/4.0, screenSize.y - screenSize.x/40.0);
+    chatTextBox.setSize(0.25*screenSize.x, screenSize.x/40.0);
+    chatTextBox.setPosition(0.875*screenSize.x, screenSize.y - screenSize.x/80.0);
     chatTextBox.maxCharacterLength = 20;
+    
+    // Matchmaking (S)
+    pages.push_back(MenuPage());
+    pages[5].labels.push_back(sf::Text("Matchmaking (S)", font, 100));
+    rect = pages[5].labels[0].getGlobalBounds();
+    pages[5].labels[0].setPosition(screenSize.x/3.0 - rect.width/2.0, screenSize.x/10.0);
+    pages[5].labels.push_back(sf::Text("", font, 16));
+    pages[5].buttons.push_back(MenuButton("Back", &buttonTexture, &font));
+    pages[5].buttons[0].size = screenSize.x/3.0;
+    pages[5].buttons[0].x = 0;
+    pages[5].buttons[0].y = 0;
+    
 }
 
 void MainMenu::think() {
@@ -153,7 +169,7 @@ void MainMenu::draw() {
         portTextBox.unfocus();
     }
     
-    if(pageNum == MainMenuPageName_Matchmaking) {
+    if(pageNum == MainMenuPageName_Matchmaking || pageNum == MainMenuPageName_ServerMatchmaking) {
         chatTextBox.render(window);
     }
     else {
@@ -180,7 +196,7 @@ void MainMenu::mouseDown(sf::Event::MouseButtonEvent event) {
         serverIpTextBox.mouseButtonPressed(event);
         portTextBox.mouseButtonPressed(event);
     }
-    else if(pageNum == MainMenuPageName_Matchmaking) {
+    else if(pageNum == MainMenuPageName_Matchmaking || pageNum == MainMenuPageName_ServerMatchmaking) {
         chatTextBox.mouseButtonPressed(event);
     }
 }
@@ -215,11 +231,19 @@ void MainMenu::buttonClicked(int index) {
         if(pages[pageNum].buttons[index].label == "Back") {
             pageNum = MainMenuPageName_Home;
         }
+        else if(pages[pageNum].buttons[index].label == "Matchmaking") {
+            pageNum = MainMenuPageName_ServerMatchmaking;
+        }
     }
     else if(pageNum == MainMenuPageName_Matchmaking) {
         if(pages[pageNum].buttons[index].label == "Log Out") {
             pageNum = MainMenuPageName_Home;
             parentApp->sendMeMessage("Log Out");
+        }
+    }
+    else if(pageNum == MainMenuPageName_ServerMatchmaking) {
+        if(pages[pageNum].buttons[index].label == "Back") {
+            pageNum = MainMenuPageName_MultiplayerServer;
         }
     }
 }
@@ -233,10 +257,12 @@ void MainMenu::keyDown(sf::Event::KeyEvent event) {
         serverIpTextBox.keyPressed(event);
         portTextBox.keyPressed(event);
     }
-    else if(pageNum == MainMenuPageName_Matchmaking) {
+    else if(pageNum == MainMenuPageName_Matchmaking || pageNum == MainMenuPageName_ServerMatchmaking) {
         if(chatTextBox.isFocused() && event.code == 58 && chatTextBox.getValue() != "") {
             // send chat to server
-            parentApp->sendMeMessage("Chat Message\n" + chatTextBox.getValue());
+            std::string str = "Chat Message\n" + chatTextBox.getValue();
+            parentApp->sendMeMessage(str);
+            chatTextBox.setValue("");
         }
         else {
             chatTextBox.keyPressed(event);
@@ -253,7 +279,7 @@ void MainMenu::textEntered(sf::Event::TextEvent event) {
         serverIpTextBox.textEntered(event.unicode);
         portTextBox.textEntered(event.unicode);
     }
-    else if(pageNum == MainMenuPageName_Matchmaking) {
+    else if(pageNum == MainMenuPageName_Matchmaking || pageNum == MainMenuPageName_ServerMatchmaking) {
         chatTextBox.textEntered(event.unicode);
     }
 }
@@ -274,5 +300,26 @@ void MainMenu::sendMeResultOfClientConnect(std::string message) {
     }
     else {
         // should never happen
+    }
+}
+
+void MainMenu::updateChat(std::vector<std::string> *chatMessages) {
+    // todo
+    std::string str = "";
+    for(int i=0; i<chatMessages->size(); i++) {
+        str += chatMessages->at(i);
+        str += "\n";
+    }
+    if(pageNum == MainMenuPageName_Matchmaking) {
+        pages[4].labels[1].setString(str);
+        sf::FloatRect rect = pages[4].labels[1].getGlobalBounds();
+        sf::Vector2u screenSize = window->getSize();
+        pages[4].labels[1].setPosition(0.75*screenSize.x, screenSize.y - screenSize.x/20.0 - rect.height);
+    }
+    else {
+        pages[5].labels[1].setString(str);
+        sf::FloatRect rect = pages[5].labels[1].getGlobalBounds();
+        sf::Vector2u screenSize = window->getSize();
+        pages[5].labels[1].setPosition(0.75*screenSize.x, screenSize.y - screenSize.x/20.0 - rect.height);
     }
 }
