@@ -17,11 +17,11 @@ App::~App() {
 
 void App::think() {
     // keep sending "george"
-    std::cout << "I";
-    sendUdp("fred");
+    mainMenu.think();
 }
 
 void App::draw() {
+    mainMenu.draw();
 }
 
 void App::mouseMove(sf::Event::MouseMoveEvent event) {
@@ -49,15 +49,50 @@ void App::textEntered(sf::Event::TextEvent event) {
 }
 
 void App::receivedTcpMessage(std::string message) {
-    // todo
+    if(message == "DID CONNECT") {
+        mainMenu.sendMeResultOfClientConnect(true);
+    }
+    else if(message == "DID NOT CONNECT") {
+        mainMenu.sendMeResultOfClientConnect(false);
+    }
+    else {
+    }
 }
 
 void App::receivedUdpMessage(std::string message) {
-    // todo
 }
 
 void App::update() {
 }
 
-void App::sendMeMessage(std::string message) {
+std::string App::sendMeMessage(std::string message) {
+    std::vector<std::string> arr = split(message, '\n');
+    if(arr.size() == 0) {
+        std::cout << "Error: empty message sent to App";
+        return nullptr;
+    }
+    if(arr[0] == "get my server tcp port") {
+        return std::to_string(getTcpPortOfLocalServer());
+    }
+    else if(arr[0] == "Login To Server") {
+        if(arr.size() == 4) {
+            std::string username = arr[1];
+            sf::IpAddress ipAddress(arr[2]);
+            unsigned short port = stoi(arr[3]);
+            connectToServer(ipAddress, port);
+        }
+    }
+    else if(arr[0] == "Log Out") {
+        connectToServer("0.0.0.0", 0);
+    }
+}
+
+std::vector<std::string> App::split(const std::string s, char delim) {
+    std::vector<std::string> elems;
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
 }

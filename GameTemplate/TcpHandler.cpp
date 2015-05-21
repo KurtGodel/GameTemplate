@@ -12,6 +12,8 @@ TcpHandler::TcpHandler(TcpHandlerCommunicator &tcpHandlerCommunicator) {
     communicator = &tcpHandlerCommunicator;
     sf::Socket::Status status = listener.listen(sf::Socket::AnyPort);
     selector.add(listener);
+    unsigned short port = listener.getLocalPort();
+    communicator->tcpPortOfLocalServer = port;
 }
 
 TcpHandler::~TcpHandler() {
@@ -53,21 +55,17 @@ void TcpHandler::run() {
                     if(selector.isReady(client))
                     {
                         // The client has sent some data, we can receive it
-                        char buffer[1024];
-                        char *begin = buffer;
-                        char *end = begin + sizeof(buffer);
-                        std::fill(begin, end, 0);
-                        std::size_t received = 0;
-                        client.receive(buffer, sizeof(buffer), received);
-                        std::string message(buffer);
-                        
-                        if(message != "") {
-                            std::string addres = client.getRemoteAddress().toString();
+                        sf::Packet packet;
+                        if(client.receive(packet) == sf::Socket::Done)
+                        {
+                            std::string str;
+                            packet >> str;
                             communicator->lock.lock();
                             communicator->socketsFromClients.push_back(&client);
-                            communicator->messagesFromClients.push_back(message);
+                            communicator->messagesFromClients.push_back(str);
                             communicator->lock.unlock();
                         }
+                        client.setBlocking(false);
                     }
                 }
             }

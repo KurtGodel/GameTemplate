@@ -13,6 +13,7 @@ ServerBaseClass::ServerBaseClass(TcpHandlerCommunicator &tcpHandlerCommunicator,
     client = &clientServerCommunicator;
     udpSocket.bind(sf::Socket::AnyPort);
     udpSocket.setBlocking(false);
+    client->tcpPortOfLocalServer = tcpHandler->tcpPortOfLocalServer;
 }
 
 ServerBaseClass::~ServerBaseClass() {
@@ -99,4 +100,8 @@ void ServerBaseClass::sendUdp(std::string message, sf::IpAddress ipAddressOfClie
         // send UDP message to remote client
         udpSocket.send(message.c_str(), message.size(), ipAddressOfClient, portOfClient);
     }
+}
+
+unsigned short ServerBaseClass::getMyUdpPort() {
+    return udpSocket.getLocalPort();
 }

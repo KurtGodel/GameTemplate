@@ -23,6 +23,7 @@ enum MainMenuPageName {
     MainMenuPageName_MultiplayerClient = 1,
     MainMenuPageName_SinglePlayer = 2,
     MainMenuPageName_MultiplayerServer = 3,
+    MainMenuPageName_Matchmaking = 4
 };
 
 class MainMenu {
@@ -37,6 +38,7 @@ public:
     void keyUp(sf::Event::KeyEvent event);
     void textEntered(sf::Event::TextEvent event);
     void sendMessage(std::string message);
+    void sendMeResultOfClientConnect(bool didConnect);
 private:
     std::vector<MenuPage> pages;
     sf::Texture buttonTexture;
@@ -53,7 +55,6 @@ private:
     TextBox usernameTextBox;
     TextBox serverIpTextBox;
     TextBox portTextBox;
-    TextBox udpPortTextBox;
 };
 
 

@@ -23,9 +23,21 @@ void Server::run() {
 }
 
 void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
-    std::cout << "SR{TCP:" << message << "}\n";
+    if(socket == nullptr) {
+        // local client sent the message
+    }
+    else {
+        // remote client sent the message
+        if(message == "Give UDP Socket") {
+            // give new client UDP port number
+            std::string newMessage = "Server UDP Port\n"+std::to_string(getMyUdpPort());
+            sendTcp(newMessage, socket);
+        }
+        else {
+            
+        }
+    }
 }
 
 void Server::receivedUdpMessage(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient) {
-    std::cout << "SR{UDP:" << message << "}\n";
 }

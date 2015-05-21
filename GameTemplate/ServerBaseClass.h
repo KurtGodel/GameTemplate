@@ -10,6 +10,7 @@
 #define __GameTemplate__ServerBaseClass__
 
 #include <stdio.h>
+#include <iostream>
 #include "ClientServerCommunicator.h"
 #include "TcpHandlerCommunicator.h"
 
@@ -21,6 +22,7 @@ public:
 protected:
     void sendTcp(std::string message, sf::TcpSocket *socket);
     void sendUdp(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient);
+    unsigned short getMyUdpPort();
     virtual void receivedTcpMessage(std::string message, sf::TcpSocket *socket) = 0;
     virtual void receivedUdpMessage(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient) = 0;
 private:

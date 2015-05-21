@@ -18,6 +18,9 @@ struct TcpHandlerCommunicator {
     std::mutex lock;
     std::vector<std::string>messagesFromClients;
     std::vector<sf::TcpSocket*>socketsFromClients;
+    unsigned short tcpPortOfLocalServer = 0;
+    
+    std::vector<std::string>debug;
 };
 
 #endif /* defined(__GameTemplate__TcpHandlerCommunicator__) */

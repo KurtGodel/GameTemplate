@@ -10,6 +10,7 @@
 #define __GameTemplate__App__
 
 #include <stdio.h>
+#include <sstream>
 #include <SFML/Graphics.hpp>
 #include "AppBaseClass.h"
 #include "MainMenu.h"
@@ -29,9 +30,10 @@ public:
     void receivedUdpMessage(std::string message);
     void receivedTcpMessage(std::string message);
     void update();
-    void sendMeMessage(std::string message);
+    std::string sendMeMessage(std::string message);
 private:
     MainMenu mainMenu;
+    std::vector<std::string> split(const std::string s, char delim);
 };
 
 #endif /* defined(__GameTemplate__App__) */

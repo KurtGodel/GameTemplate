@@ -94,6 +94,14 @@ int main(int, char const**)
     
     App app(window, clientCommunicator);
     
+    // special font
+    sf::Font font;
+    if(!font.loadFromFile(resourcePath() + "cmunrm.ttf")) {
+        window.close();
+    }
+    
+    std::string debugStr = "";
+    
     // Start the game loop
     while(window.isOpen())
     {
@@ -114,6 +122,15 @@ int main(int, char const**)
                 app.mouseUp(event.mouseButton);
             }
             else if(event.type == sf::Event::KeyPressed) {
+                if(event.key.code == sf::Keyboard::Key::Space) {
+                    int q = 42;
+                    q = 17;
+                    
+                    q = 19;
+                    q = 8;
+                    int r = 19;
+                    r = q+5;
+                }
                 app.keyDown(event.key);
             }
             else if(event.type == sf::Event::KeyReleased) {
@@ -135,7 +152,42 @@ int main(int, char const**)
         
         // Render screen
         app.draw();
-
+        
+        std::vector<std::string>toPrint;
+        tcpHandlerCommunicator.lock.lock();
+        for(int i=0; i<tcpHandlerCommunicator.debug.size(); i++) {
+            toPrint.push_back(tcpHandlerCommunicator.debug[i]);
+        }
+        tcpHandlerCommunicator.debug.clear();
+        tcpHandlerCommunicator.lock.unlock();
+        
+        clientServerCommunicator.lock.lock();
+        for(int i=0; i<clientServerCommunicator.debug.size(); i++) {
+            toPrint.push_back(clientServerCommunicator.debug[i]);
+        }
+        clientServerCommunicator.debug.clear();
+        clientServerCommunicator.lock.unlock();
+        
+        clientCommunicator.lock.lock();
+        for(int i=0; i<clientCommunicator.debug.size(); i++) {
+            toPrint.push_back(clientCommunicator.debug[i]);
+        }
+        clientCommunicator.debug.clear();
+        clientCommunicator.lock.unlock();
+        
+        // print stuff
+        int numOfItems = toPrint.size();
+        if(numOfItems > 10) {
+            numOfItems = 10;
+        }
+        for(int i=0; i<numOfItems; i++) {
+            debugStr += toPrint[i] + "\n";
+            std::cout << toPrint[i] << "\n";
+        }
+        sf::Text text(debugStr, font, 16);
+        text.setColor(sf::Color::Red);
+        window.draw(text);
+        
         // Update the window
         window.display();
     }

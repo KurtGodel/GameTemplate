@@ -581,9 +581,6 @@ std::string TextBox::UnicodeToString(int key)
         else
         {
             // other
-            std::cout << "(";
-            std::cout << key;
-            std::cout << ")";
             return "";
         }
     }

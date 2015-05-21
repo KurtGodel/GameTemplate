@@ -60,3 +60,7 @@ void AppBaseClass::sendTcp(std::string message) {
     communicator->tcpMessagesToServer.push_back(message);
     communicator->lock.unlock();
 }
+
+unsigned short AppBaseClass::getTcpPortOfLocalServer() {
+    return communicator->tcpPortOfLocalServer;
+}

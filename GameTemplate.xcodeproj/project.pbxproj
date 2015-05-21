@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		287C8BC31B0D2C3600D723A7 /* cmunrm.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 287C8BC21B0D2C3600D723A7 /* cmunrm.ttf */; };
 		28A01FC31B0AC1080030425F /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28A01FC11B0AC1080030425F /* App.cpp */; };
 		28A01FC91B0AC6990030425F /* TcpHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28A01FC71B0AC6990030425F /* TcpHandler.cpp */; };
 		28A02A1B1B0BB22100612E95 /* AppBaseClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28A02A191B0BB22100612E95 /* AppBaseClass.cpp */; };
@@ -31,6 +32,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		287C8BC21B0D2C3600D723A7 /* cmunrm.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = cmunrm.ttf; sourceTree = "<group>"; };
 		28A01FC11B0AC1080030425F /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
 		28A01FC21B0AC1080030425F /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		28A01FC71B0AC6990030425F /* TcpHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TcpHandler.cpp; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 		28BE43601B067D09001D5E57 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				287C8BC21B0D2C3600D723A7 /* cmunrm.ttf */,
 				28A10CFA1B099F04005B48BA /* Menu Plan.png */,
 				28A10CFB1B099F04005B48BA /* Menu.delineato */,
 				28BE43611B067D09001D5E57 /* cute_image.jpg */,
@@ -231,6 +234,7 @@
 			files = (
 				28A10CFC1B099F04005B48BA /* Menu Plan.png in Resources */,
 				28BE43851B067D3D001D5E57 /* button.png in Resources */,
+				287C8BC31B0D2C3600D723A7 /* cmunrm.ttf in Resources */,
 				28BE43801B067D3D001D5E57 /* Overview.delineato in Resources */,
 				28BE43681B067D09001D5E57 /* icon.png in Resources */,
 				28BE43661B067D09001D5E57 /* sansation.ttf in Resources */,

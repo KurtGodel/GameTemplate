@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <string>
+#include <iostream>
 #include "ClientCommunicator.h"
 
 class AppBaseClass {
@@ -18,7 +19,7 @@ public:
     AppBaseClass(ClientCommunicator &clientCommunicator);
     ~AppBaseClass();
     void checkNetworkForMessages();
-    virtual void sendMeMessage(std::string message) = 0;
+    virtual std::string sendMeMessage(std::string message) = 0;
 protected:
     void connectToServer(sf::IpAddress ipAddressOfServer, unsigned short tcpPortOfServer);
     void sendUdp(std::string message);
@@ -27,6 +28,7 @@ protected:
     virtual void receivedUdpMessage(std::string message) = 0;
     virtual void think() = 0;
     virtual void draw() = 0;
+    unsigned short getTcpPortOfLocalServer();
 private:
     ClientCommunicator *communicator;
 };

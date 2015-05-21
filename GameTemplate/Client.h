@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 #include "ClientCommunicator.h"
 #include "ClientServerCommunicator.h"
 
@@ -20,9 +21,10 @@ public:
     ~Client();
     void run();
 private:
-    bool connectTcpToServer(sf::IpAddress ipAddressOfServer, unsigned short portOfServer);
+    bool connectTcpToServer(sf::IpAddress serverIpAddress, unsigned short serverPort);
     void sendTcpMessage(std::string message);
     void sendUdpMessage(std::string message);
+    std::vector<std::string> split(const std::string s, char delim);
     
     ClientCommunicator *app;
     ClientServerCommunicator *server;

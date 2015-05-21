@@ -22,6 +22,9 @@ struct ClientCommunicator {
     std::vector<std::string>udpMessagesToServer;
     std::vector<sf::IpAddress>connectToServerIp;
     std::vector<unsigned short>connectToServerTcpPort;
+    unsigned short tcpPortOfLocalServer = 0;
+    
+    std::vector<std::string>debug;
 };
 
 #endif /* defined(__GameTemplate__ClientCommunicator__) */
