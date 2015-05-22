@@ -28,6 +28,14 @@ void ServerGame::think() {
             sendTcpMessage(message, teams[i][j]);
         }
     }
+    
+    // update dynamicGame history
+    DynamicGameState copyOfCurrentGameState = dynamicGame[dynamicGame.size()-1];
+    copyOfCurrentGameState.timeStamp = getTime();
+    dynamicGame.push_back(copyOfCurrentGameState);
+    if(dynamicGame.size() > 20) {
+        dynamicGame.erase(dynamicGame.begin()+dynamicGame.size()-1,dynamicGame.begin()+dynamicGame.size());
+    }
 }
 
 std::string ServerGame::createMessageForTeam(unsigned int i) {
@@ -58,25 +66,20 @@ void ServerGame::receivedUdpMessage(std::string message, std::string username) {
 }
 
 void ServerGame::keyDown(long long timeStamp, int keyCode, std::string username) {
+    for(int i=0; i<dynamicGame.size(); i++) {
+        if(timeStamp > dynamicGame[i].timeStamp) {
+            // this frame happened after the event - it should be altered
+        }
+    }
     std::cout << getTime()-timeStamp << "\n";
 }
 
 void ServerGame::sendTcpMessage(std::string message, std::string username) {
-    if(username == "") {
-        parentApp->sendTcpMessage(message, "SERVER");
-    }
-    else {
-        parentApp->sendTcpMessage(message, username);
-    }
+    parentApp->sendTcpMessage(message, username);
 }
 
 void ServerGame::sendUdpMessage(std::string message, std::string username) {
-    if(username == "") {
-        parentApp->sendUdpMessage(message, "SERVER");
-    }
-    else {
-        parentApp->sendUdpMessage(message, username);
-    }
+    parentApp->sendUdpMessage(message, username);
 }
 
 void ServerGame::loadMap(std::string newMapName) {

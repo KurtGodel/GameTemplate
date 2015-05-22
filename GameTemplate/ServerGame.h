@@ -32,7 +32,7 @@ public:
 private:
     std::vector<std::vector<std::string>>teams;
     StaticGameState staticGame;
-    std::vector<DynamicGameState> gameHistory;
+    std::vector<DynamicGameState> dynamicGame; // history vector
     std::string mapName = "";
     ServerBaseClass *parentApp;
     

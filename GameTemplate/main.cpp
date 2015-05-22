@@ -86,11 +86,30 @@ int main(int, char const**)
     pthread_t tcpListenerThread;
     pthread_create(&tcpListenerThread, NULL, startTcpListenerThread, (void *)(&tcpHandlerCommunicator));
     
+    // sleep for 100 milliseconds
+    struct timespec tim, tim2;
+    tim.tv_sec = 0;
+    tim.tv_nsec = 100;
+    tim.tv_nsec *= 1000000;
+    nanosleep(&tim , &tim2);
+    
     pthread_t serverThread;
     pthread_create(&serverThread, NULL, startServerThread, (void *)(&clientServerTcpCommunicatorPair));
     
+    // sleep for 100 milliseconds
+    tim.tv_sec = 0;
+    tim.tv_nsec = 100;
+    tim.tv_nsec *= 1000000;
+    nanosleep(&tim , &tim2);
+    
     pthread_t clientThread;
     pthread_create(&clientThread, NULL, startClientThread, (void *)(&clientServerCommunicatorPair));
+    
+    // sleep for 100 milliseconds
+    tim.tv_sec = 0;
+    tim.tv_nsec = 100;
+    tim.tv_nsec *= 1000000;
+    nanosleep(&tim , &tim2);
     
     App app(window, clientCommunicator);
     
@@ -99,8 +118,6 @@ int main(int, char const**)
     if(!font.loadFromFile(resourcePath() + "cmunrm.ttf")) {
         window.close();
     }
-    
-    std::string debugStr = "";
     
     // Start the game loop
     while(window.isOpen())
@@ -122,15 +139,6 @@ int main(int, char const**)
                 app.mouseUp(event.mouseButton);
             }
             else if(event.type == sf::Event::KeyPressed) {
-                if(event.key.code == sf::Keyboard::Key::Space) {
-                    int q = 42;
-                    q = 17;
-                    
-                    q = 19;
-                    q = 8;
-                    int r = 19;
-                    r = q+5;
-                }
                 app.keyDown(event.key);
             }
             else if(event.type == sf::Event::KeyReleased) {

@@ -13,6 +13,7 @@
 #include <SFML/Graphics.hpp>
 
 struct DynamicGameState {
+    long long timeStamp;
     std::vector<sf::Vector2f> players;
 };
 
