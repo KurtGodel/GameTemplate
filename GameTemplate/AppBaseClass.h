@@ -19,13 +19,14 @@ public:
     AppBaseClass(ClientCommunicator &clientCommunicator);
     ~AppBaseClass();
     void checkNetworkForMessages();
+    void sendUdp(std::string message);
+    void sendTcp(std::string message);
     virtual std::string sendMeMessage(std::string message) = 0;
 protected:
     void connectToServer(std::string username, sf::IpAddress ipAddressOfServer, unsigned short tcpPortOfServer);
-    void sendUdp(std::string message);
-    void sendTcp(std::string message);
     virtual void receivedTcpMessage(std::string message) = 0;
     virtual void receivedUdpMessage(std::string message) = 0;
+    unsigned short getUdpPort();
     virtual void think() = 0;
     virtual void draw() = 0;
     unsigned short getTcpPortOfLocalServer();

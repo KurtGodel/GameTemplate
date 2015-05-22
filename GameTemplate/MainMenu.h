@@ -13,6 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include "ResourcePath.hpp"
 #include "MenuPage.h"
 #include "TextBox.h"
@@ -41,6 +42,7 @@ public:
     void sendMessage(std::string message);
     void sendMeResultOfClientConnect(std::string message);
     void updateChat(std::vector<std::string> *chatMessages);
+    void updateTeams(std::vector<std::string> *teamList);
 private:
     std::vector<MenuPage> pages;
     sf::Texture buttonTexture;
@@ -58,6 +60,8 @@ private:
     TextBox serverIpTextBox;
     TextBox portTextBox;
     TextBox chatTextBox;
+    
+    std::vector<std::string> split(const std::string s, char delim);
 };
 
 

@@ -11,9 +11,11 @@
 
 #include <stdio.h>
 #include <sstream>
+#include <chrono>
 #include <SFML/Graphics.hpp>
 #include "AppBaseClass.h"
 #include "MainMenu.h"
+#include "ClientGame.h"
 
 class App : public AppBaseClass {
 public:
@@ -29,13 +31,15 @@ public:
     void textEntered(sf::Event::TextEvent event);
     void receivedUdpMessage(std::string message);
     void receivedTcpMessage(std::string message);
-    void update();
     std::string sendMeMessage(std::string message);
 private:
     MainMenu mainMenu;
+    ClientGame game;
     std::vector<std::string> split(const std::string s, char delim);
     std::vector<std::string> chat;
     std::string username = "";
+    long long lastAliveMessageSent;
+    bool isShowingMainMenu = true;
 };
 
 #endif /* defined(__GameTemplate__App__) */

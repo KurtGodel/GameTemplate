@@ -22,7 +22,7 @@ public:
     ~TcpHandler();
     void run();
 private:
-    std::list<sf::TcpSocket*> clients;
+    std::vector<sf::TcpSocket*> clients;
     sf::SocketSelector selector;
     sf::TcpListener listener;
     TcpHandlerCommunicator *communicator;

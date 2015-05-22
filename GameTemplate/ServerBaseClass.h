@@ -19,6 +19,8 @@ public:
     ServerBaseClass(TcpHandlerCommunicator &tcpHandlerCommunicator, ClientServerCommunicator &clientServerCommunicator);
     ~ServerBaseClass();
     void checkNetworkForMessages();
+    virtual void sendTcpMessage(std::string message, std::string username) = 0;
+    virtual void sendUdpMessage(std::string message, std::string username) = 0;
 protected:
     void sendTcp(std::string message, sf::TcpSocket *socket);
     void sendUdp(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient);

@@ -118,7 +118,6 @@ MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&fo
     pages[4].labels.push_back(sf::Text("Matchmaking (C)", font, 100));
     rect = pages[4].labels[0].getGlobalBounds();
     pages[4].labels[0].setPosition(screenSize.x/3.0 - rect.width/2.0, screenSize.x/10.0);
-    pages[4].labels.push_back(sf::Text("", font, 16));
     pages[4].buttons.push_back(MenuButton("Log Out", &buttonTexture, &font));
     pages[4].buttons[0].size = screenSize.x/3.0;
     pages[4].buttons[0].x = 0;
@@ -127,16 +126,67 @@ MainMenu::MainMenu(sf::RenderWindow &w, AppBaseClass &app) : usernameTextBox(&fo
     chatTextBox.setPosition(0.875*screenSize.x, screenSize.y - screenSize.x/80.0);
     chatTextBox.maxCharacterLength = 20;
     
+    pages[4].buttons.push_back(MenuButton("No Team", &buttonTexture, &font));
+    pages[4].buttons[1].size = 200;
+    pages[4].buttons[1].x = 50;
+    pages[4].buttons[1].y = screenSize.y/2.0;
+    pages[4].buttons.push_back(MenuButton("Team 1", &buttonTexture, &font));
+    pages[4].buttons[2].size = 200;
+    pages[4].buttons[2].x = 300;
+    pages[4].buttons[2].y = screenSize.y/2.0;
+    pages[4].buttons.push_back(MenuButton("Team 2", &buttonTexture, &font));
+    pages[4].buttons[3].size = 200;
+    pages[4].buttons[3].x = 550;
+    pages[4].buttons[3].y = screenSize.y/2.0;
+    pages[4].labels.push_back(sf::Text("A...", font, 16));
+    pages[4].labels[1].setPosition(50, screenSize.y/2.0+40.0);
+    pages[4].labels.push_back(sf::Text("B...", font, 16));
+    pages[4].labels[2].setPosition(300, screenSize.y/2.0+40.0);
+    pages[4].labels.push_back(sf::Text("C...", font, 16));
+    pages[4].labels[3].setPosition(550, screenSize.y/2.0+40.0);
+    
+    // delete me and the corresponding functionality when game is launched
+    pages[4].buttons.push_back(MenuButton("Launch Game", &buttonTexture, &font));
+    pages[4].buttons[4].center(screenSize);
+    pages[4].buttons[4].y -= 100;
+    
+    pages[4].labels.push_back(sf::Text("", font, 16));
+    
+    
     // Matchmaking (S)
     pages.push_back(MenuPage());
     pages[5].labels.push_back(sf::Text("Matchmaking (S)", font, 100));
     rect = pages[5].labels[0].getGlobalBounds();
     pages[5].labels[0].setPosition(screenSize.x/3.0 - rect.width/2.0, screenSize.x/10.0);
-    pages[5].labels.push_back(sf::Text("", font, 16));
     pages[5].buttons.push_back(MenuButton("Back", &buttonTexture, &font));
     pages[5].buttons[0].size = screenSize.x/3.0;
     pages[5].buttons[0].x = 0;
     pages[5].buttons[0].y = 0;
+    
+    pages[5].buttons.push_back(MenuButton("No Team", &buttonTexture, &font));
+    pages[5].buttons[1].size = 200;
+    pages[5].buttons[1].x = 50;
+    pages[5].buttons[1].y = screenSize.y/2.0;
+    pages[5].buttons.push_back(MenuButton("Team 1", &buttonTexture, &font));
+    pages[5].buttons[2].size = 200;
+    pages[5].buttons[2].x = 300;
+    pages[5].buttons[2].y = screenSize.y/2.0;
+    pages[5].buttons.push_back(MenuButton("Team 2", &buttonTexture, &font));
+    pages[5].buttons[3].size = 200;
+    pages[5].buttons[3].x = 550;
+    pages[5].buttons[3].y = screenSize.y/2.0;
+    pages[5].labels.push_back(sf::Text("A...", font, 16));
+    pages[5].labels[1].setPosition(50, screenSize.y/2.0+40.0);
+    pages[5].labels.push_back(sf::Text("B...", font, 16));
+    pages[5].labels[2].setPosition(300, screenSize.y/2.0+40.0);
+    pages[5].labels.push_back(sf::Text("C...", font, 16));
+    pages[5].labels[3].setPosition(550, screenSize.y/2.0+40.0);
+    
+    pages[5].buttons.push_back(MenuButton("Launch Game", &buttonTexture, &font));
+    pages[5].buttons[4].center(screenSize);
+    pages[5].buttons[4].y -= 100;
+    
+    pages[5].labels.push_back(sf::Text("", font, 16));
     
 }
 
@@ -240,10 +290,35 @@ void MainMenu::buttonClicked(int index) {
             pageNum = MainMenuPageName_Home;
             parentApp->sendMeMessage("Log Out");
         }
+        else if(pages[pageNum].buttons[index].label == "No Team") {
+            parentApp->sendMeMessage("No Team");
+        }
+        else if(pages[pageNum].buttons[index].label == "Team 1") {
+            parentApp->sendMeMessage("Team 1");
+        }
+        else if(pages[pageNum].buttons[index].label == "Team 2") {
+            parentApp->sendMeMessage("Team 2");
+        }
+        else if(pages[pageNum].buttons[index].label == "Launch Game") {
+            // delete this entire "else-if" block when game is launched
+            parentApp->sendMeMessage("Launch Game");
+        }
     }
     else if(pageNum == MainMenuPageName_ServerMatchmaking) {
         if(pages[pageNum].buttons[index].label == "Back") {
             pageNum = MainMenuPageName_MultiplayerServer;
+        }
+        else if(pages[pageNum].buttons[index].label == "No Team") {
+            parentApp->sendMeMessage("No Team");
+        }
+        else if(pages[pageNum].buttons[index].label == "Team 1") {
+            parentApp->sendMeMessage("Team 1");
+        }
+        else if(pages[pageNum].buttons[index].label == "Team 2") {
+            parentApp->sendMeMessage("Team 2");
+        }
+        else if(pages[pageNum].buttons[index].label == "Launch Game") {
+            parentApp->sendMeMessage("Launch Game");
         }
     }
 }
@@ -298,6 +373,9 @@ void MainMenu::sendMeResultOfClientConnect(std::string message) {
     else if(message == "DID NOT CONNECT") {
         pages[1].labels[4].setString("Connection Failed");
     }
+    else if(message == "CONNECTING TO SELF") {
+        pages[1].labels[4].setString("You Can't Connect to Yourself");
+    }
     else {
         // should never happen
     }
@@ -311,15 +389,59 @@ void MainMenu::updateChat(std::vector<std::string> *chatMessages) {
         str += "\n";
     }
     if(pageNum == MainMenuPageName_Matchmaking) {
-        pages[4].labels[1].setString(str);
-        sf::FloatRect rect = pages[4].labels[1].getGlobalBounds();
+        pages[4].labels[4].setString(str);
+        sf::FloatRect rect = pages[4].labels[4].getGlobalBounds();
         sf::Vector2u screenSize = window->getSize();
-        pages[4].labels[1].setPosition(0.75*screenSize.x, screenSize.y - screenSize.x/20.0 - rect.height);
+        pages[4].labels[4].setPosition(0.75*screenSize.x, screenSize.y - screenSize.x/20.0 - rect.height);
     }
     else {
-        pages[5].labels[1].setString(str);
-        sf::FloatRect rect = pages[5].labels[1].getGlobalBounds();
+        pages[5].labels[4].setString(str);
+        sf::FloatRect rect = pages[5].labels[4].getGlobalBounds();
         sf::Vector2u screenSize = window->getSize();
-        pages[5].labels[1].setPosition(0.75*screenSize.x, screenSize.y - screenSize.x/20.0 - rect.height);
+        pages[5].labels[4].setPosition(0.75*screenSize.x, screenSize.y - screenSize.x/20.0 - rect.height);
     }
+}
+
+void MainMenu::updateTeams(std::vector<std::string> *teamList) {
+    std::vector<std::string> dup(*teamList);
+    std::vector<std::string> noTeam = split(dup[1], '\t');
+    std::vector<std::string> team1 = split(dup[2], '\t');
+    std::vector<std::string> team2 = split(dup[3], '\t');
+    std::string str = "";
+    for(int i=0; i<noTeam.size(); i++) {
+        if(i != 0) {
+            str += "\n";
+        }
+        str += noTeam[i];
+    }
+    pages[4].labels[1].setString(str);
+    pages[5].labels[1].setString(str);
+    str = "";
+    for(int i=0; i<team1.size(); i++) {
+        if(i != 0) {
+            str += "\n";
+        }
+        str += team1[i];
+    }
+    pages[4].labels[2].setString(str);
+    pages[5].labels[2].setString(str);
+    str = "";
+    for(int i=0; i<team2.size(); i++) {
+        if(i != 0) {
+            str += "\n";
+        }
+        str += team2[i];
+    }
+    pages[4].labels[3].setString(str);
+    pages[5].labels[3].setString(str);
+}
+
+std::vector<std::string> MainMenu::split(const std::string s, char delim) {
+    std::vector<std::string> elems;
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
 }

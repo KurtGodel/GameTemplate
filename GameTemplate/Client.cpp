@@ -171,7 +171,6 @@ std::vector<std::string> Client::split(const std::string s, char delim) {
     return elems;
 }
 
-
 bool Client::connectTcpToServer(sf::IpAddress serverIpAddress, unsigned short serverPort) {
     ipAddressOfServer = "0.0.0.0";
     tcpPortOfServer = 0;
@@ -239,7 +238,7 @@ void Client::sendUdpMessage(std::string message) {
              Give UDP Socket
              {username}
             */
-            std::string newMessage = "Give UDP Socket\n" + username;
+            std::string newMessage = "Give UDP Socket\n" + username + "\n" + std::to_string(udpSocket.getLocalPort());
             sf::Packet packet;
             packet << newMessage;
             tcpSocket.send(packet);

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		283AC8D11B0EC01500DE6E6A /* ServerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283AC8CF1B0EC01500DE6E6A /* ServerGame.cpp */; };
+		283AC8D51B0EC21F00DE6E6A /* ClientGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 283AC8D31B0EC21F00DE6E6A /* ClientGame.cpp */; };
 		287C8BC31B0D2C3600D723A7 /* cmunrm.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 287C8BC21B0D2C3600D723A7 /* cmunrm.ttf */; };
 		28A01FC31B0AC1080030425F /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28A01FC11B0AC1080030425F /* App.cpp */; };
 		28A01FC91B0AC6990030425F /* TcpHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28A01FC71B0AC6990030425F /* TcpHandler.cpp */; };
@@ -28,11 +30,17 @@
 		28BE43821B067D3D001D5E57 /* MainMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43771B067D3D001D5E57 /* MainMenu.cpp */; };
 		28BE43851B067D3D001D5E57 /* button.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE437C1B067D3D001D5E57 /* button.png */; };
 		28BE43881B067D71001D5E57 /* MenuPage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28BE43861B067D71001D5E57 /* MenuPage.cpp */; };
+		28C0C4C21B0ED1E8006ADBA5 /* MyMap.txt in Resources */ = {isa = PBXBuildFile; fileRef = 28C0C4C11B0ED1E8006ADBA5 /* MyMap.txt */; };
 		28F2AD3E1B0B71F600459DEE /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 28F2AD3C1B0B71F600459DEE /* Client.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		283AC8CF1B0EC01500DE6E6A /* ServerGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ServerGame.cpp; sourceTree = "<group>"; };
+		283AC8D01B0EC01500DE6E6A /* ServerGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerGame.h; sourceTree = "<group>"; };
+		283AC8D31B0EC21F00DE6E6A /* ClientGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClientGame.cpp; sourceTree = "<group>"; };
+		283AC8D41B0EC21F00DE6E6A /* ClientGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientGame.h; sourceTree = "<group>"; };
 		287C8BC21B0D2C3600D723A7 /* cmunrm.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = cmunrm.ttf; sourceTree = "<group>"; };
+		287D2E931B0E767C004F3304 /* ClientOfServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientOfServer.h; sourceTree = "<group>"; };
 		28A01FC11B0AC1080030425F /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
 		28A01FC21B0AC1080030425F /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		28A01FC71B0AC6990030425F /* TcpHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TcpHandler.cpp; sourceTree = "<group>"; };
@@ -66,6 +74,9 @@
 		28BE437C1B067D3D001D5E57 /* button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button.png; sourceTree = "<group>"; };
 		28BE43861B067D71001D5E57 /* MenuPage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuPage.cpp; sourceTree = "<group>"; };
 		28BE43871B067D71001D5E57 /* MenuPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuPage.h; sourceTree = "<group>"; };
+		28C0C4B91B0ECED0006ADBA5 /* StaticGameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StaticGameState.h; sourceTree = "<group>"; };
+		28C0C4BC1B0ECF60006ADBA5 /* DynamicGameState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicGameState.h; sourceTree = "<group>"; };
+		28C0C4C11B0ED1E8006ADBA5 /* MyMap.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MyMap.txt; sourceTree = "<group>"; };
 		28F2AD3C1B0B71F600459DEE /* Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Client.cpp; sourceTree = "<group>"; };
 		28F2AD3D1B0B71F600459DEE /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		28F2AD401B0B724900459DEE /* ClientCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientCommunicator.h; sourceTree = "<group>"; };
@@ -83,9 +94,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		283AC8D21B0EC02800DE6E6A /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				283AC8D31B0EC21F00DE6E6A /* ClientGame.cpp */,
+				283AC8D41B0EC21F00DE6E6A /* ClientGame.h */,
+				283AC8CF1B0EC01500DE6E6A /* ServerGame.cpp */,
+				283AC8D01B0EC01500DE6E6A /* ServerGame.h */,
+				28C0C4B91B0ECED0006ADBA5 /* StaticGameState.h */,
+				28C0C4BC1B0ECF60006ADBA5 /* DynamicGameState.h */,
+			);
+			name = Game;
+			sourceTree = "<group>";
+		};
 		28A02A1C1B0BBA4B00612E95 /* Ignore Me */ = {
 			isa = PBXGroup;
 			children = (
+				28BE435B1B067D09001D5E57 /* ResourcePath.mm */,
+				28BE435D1B067D09001D5E57 /* ResourcePath.hpp */,
+				28BE435E1B067D09001D5E57 /* main.cpp */,
 				28F2AD3C1B0B71F600459DEE /* Client.cpp */,
 				28F2AD3D1B0B71F600459DEE /* Client.h */,
 				28A02A1D1B0BD3E100612E95 /* ServerBaseClass.cpp */,
@@ -120,16 +147,11 @@
 		28BE43581B067D09001D5E57 /* GameTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				28BE435B1B067D09001D5E57 /* ResourcePath.mm */,
-				28BE435D1B067D09001D5E57 /* ResourcePath.hpp */,
-				28BE435E1B067D09001D5E57 /* main.cpp */,
-				28A02A201B0BD96D00612E95 /* Server.cpp */,
-				28A02A211B0BD96D00612E95 /* Server.h */,
-				28A01FC11B0AC1080030425F /* App.cpp */,
-				28A01FC21B0AC1080030425F /* App.h */,
-				28F18F421B06BF36005A5B43 /* Menu */,
-				28A02A1C1B0BBA4B00612E95 /* Ignore Me */,
+				283AC8D21B0EC02800DE6E6A /* Game */,
 				28BE43601B067D09001D5E57 /* Resources */,
+				28F18F421B06BF36005A5B43 /* Menu */,
+				28C0C4B41B0ECDAB006ADBA5 /* App & Server Root Files */,
+				28A02A1C1B0BBA4B00612E95 /* Ignore Me */,
 				28BE43591B067D09001D5E57 /* Supporting Files */,
 			);
 			path = GameTemplate;
@@ -156,8 +178,21 @@
 				28BE43631B067D09001D5E57 /* nice_music.ogg */,
 				28BE43651B067D09001D5E57 /* sansation.ttf */,
 				28BE43671B067D09001D5E57 /* icon.png */,
+				28C0C4C11B0ED1E8006ADBA5 /* MyMap.txt */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		28C0C4B41B0ECDAB006ADBA5 /* App & Server Root Files */ = {
+			isa = PBXGroup;
+			children = (
+				28A02A201B0BD96D00612E95 /* Server.cpp */,
+				28A02A211B0BD96D00612E95 /* Server.h */,
+				287D2E931B0E767C004F3304 /* ClientOfServer.h */,
+				28A01FC11B0AC1080030425F /* App.cpp */,
+				28A01FC21B0AC1080030425F /* App.h */,
+			);
+			name = "App & Server Root Files";
 			sourceTree = "<group>";
 		};
 		28F18F421B06BF36005A5B43 /* Menu */ = {
@@ -235,6 +270,7 @@
 				28A10CFC1B099F04005B48BA /* Menu Plan.png in Resources */,
 				28BE43851B067D3D001D5E57 /* button.png in Resources */,
 				287C8BC31B0D2C3600D723A7 /* cmunrm.ttf in Resources */,
+				28C0C4C21B0ED1E8006ADBA5 /* MyMap.txt in Resources */,
 				28BE43801B067D3D001D5E57 /* Overview.delineato in Resources */,
 				28BE43681B067D09001D5E57 /* icon.png in Resources */,
 				28BE43661B067D09001D5E57 /* sansation.ttf in Resources */,
@@ -268,7 +304,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				283AC8D51B0EC21F00DE6E6A /* ClientGame.cpp in Sources */,
 				28A01FC91B0AC6990030425F /* TcpHandler.cpp in Sources */,
+				283AC8D11B0EC01500DE6E6A /* ServerGame.cpp in Sources */,
 				28A02A1B1B0BB22100612E95 /* AppBaseClass.cpp in Sources */,
 				28F2AD3E1B0B71F600459DEE /* Client.cpp in Sources */,
 				28BE435F1B067D09001D5E57 /* main.cpp in Sources */,

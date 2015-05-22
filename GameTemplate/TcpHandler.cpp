@@ -22,51 +22,48 @@ TcpHandler::~TcpHandler() {
 
 void TcpHandler::run() {
     // Endless loop that waits for new connections
-    while(true)
-    {
+    while(true) {
         // Make the selector wait for data on any socket
-        if(selector.wait())
-        {
-            std::cout << "Q";
+        if(selector.wait()) {
             // Test the listener
-            if(selector.isReady(listener))
-            {
+            if(selector.isReady(listener)) {
                 // The listener is ready: there is a pending connection
                 sf::TcpSocket* client = new sf::TcpSocket;
-                if(listener.accept(*client) == sf::Socket::Done)
-                {
+                if(listener.accept(*client) == sf::Socket::Done) {
                     // Add the new client to the clients list
                     clients.push_back(client);
                     // Add the new client to the selector so that we will
                     // be notified when he sends something
                     selector.add(*client);
                 }
-                else
-                {
+                else {
                     // Error, we won't get a new connection, delete the socket
                     delete client;
                 }
             }
-            else
-            {
+            else {
                 // The listener socket is not ready, test all other sockets (the clients)
-                for(std::list<sf::TcpSocket*>::iterator it = clients.begin(); it != clients.end(); ++it)
-                {
-                    sf::TcpSocket& client = **it;
-                    if(selector.isReady(client))
-                    {
+                for(int i=0; i<clients.size(); i++) {
+                    sf::TcpSocket *client = clients[i];
+                    if(selector.isReady(*client)) {
                         // The client has sent some data, we can receive it
                         sf::Packet packet;
-                        if(client.receive(packet) == sf::Socket::Done)
-                        {
+                        if(client->receive(packet) == sf::Socket::Done) {
                             std::string str;
                             packet >> str;
                             communicator->lock.lock();
-                            communicator->socketsFromClients.push_back(&client);
+                            communicator->socketsFromClients.push_back(client);
                             communicator->messagesFromClients.push_back(str);
                             communicator->lock.unlock();
                         }
-                        client.setBlocking(false);
+                        if(client->receive(packet) == sf::Socket::Disconnected) {
+                            selector.remove(*client);
+                            client->disconnect();
+                            delete(client);
+                            clients.erase(clients.begin()+i, clients.begin()+i+1);
+                            i--;
+                        }
+                        client->setBlocking(false);
                     }
                 }
             }
