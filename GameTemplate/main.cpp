@@ -153,41 +153,6 @@ int main(int, char const**)
         // Render screen
         app.draw();
         
-        std::vector<std::string>toPrint;
-        tcpHandlerCommunicator.lock.lock();
-        for(int i=0; i<tcpHandlerCommunicator.debug.size(); i++) {
-            toPrint.push_back(tcpHandlerCommunicator.debug[i]);
-        }
-        tcpHandlerCommunicator.debug.clear();
-        tcpHandlerCommunicator.lock.unlock();
-        
-        clientServerCommunicator.lock.lock();
-        for(int i=0; i<clientServerCommunicator.debug.size(); i++) {
-            toPrint.push_back(clientServerCommunicator.debug[i]);
-        }
-        clientServerCommunicator.debug.clear();
-        clientServerCommunicator.lock.unlock();
-        
-        clientCommunicator.lock.lock();
-        for(int i=0; i<clientCommunicator.debug.size(); i++) {
-            toPrint.push_back(clientCommunicator.debug[i]);
-        }
-        clientCommunicator.debug.clear();
-        clientCommunicator.lock.unlock();
-        
-        // print stuff
-        int numOfItems = toPrint.size();
-        if(numOfItems > 10) {
-            numOfItems = 10;
-        }
-        for(int i=0; i<numOfItems; i++) {
-            debugStr += toPrint[i] + "\n";
-            std::cout << toPrint[i] << "\n";
-        }
-        sf::Text text(debugStr, font, 16);
-        text.setColor(sf::Color::Red);
-        window.draw(text);
-        
         // Update the window
         window.display();
     }

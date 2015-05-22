@@ -15,6 +15,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <chrono>
 #include <SFML/Graphics.hpp>
 #include "ResourcePath.hpp"
 #include "AppBaseClass.h"
@@ -48,6 +49,7 @@ private:
     std::string readFile(std::string fileName);
     void loadMap(std::string newMapName);
     void clearGameState();
+    long long getTime();
     std::vector<std::string> split(const std::string s, char delim);
 };
 

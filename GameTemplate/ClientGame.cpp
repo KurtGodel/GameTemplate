@@ -47,7 +47,6 @@ void ClientGame::think() {
 
 void ClientGame::draw() {
     // draw static state
-    std::cout << "draw\n";
     for(int i=0; i<staticGame.backgroundCircles.size(); i++) {
         sf::CircleShape circle = sf::CircleShape(50);
         circle.setPosition(staticGame.backgroundCircles[i]);
@@ -57,17 +56,17 @@ void ClientGame::draw() {
 }
 
 void ClientGame::mouseMove(sf::Event::MouseMoveEvent event) {
-    sendUdpMessage("UDP");
 }
 
 void ClientGame::mouseDown(sf::Event::MouseButtonEvent event) {
-    sendTcpMessage("TCP");
 }
 
 void ClientGame::mouseUp(sf::Event::MouseButtonEvent event) {
 }
 
 void ClientGame::keyDown(sf::Event::KeyEvent event) {
+    sf::Vector2u screenSize = window->getSize();
+    sendUdpMessage("KEY DOWN\n" + std::to_string(getTime()) + "\n" + std::to_string(event.code));
 }
 
 void ClientGame::keyUp(sf::Event::KeyEvent event) {
@@ -82,7 +81,6 @@ void ClientGame::loadMap(std::string newMapName) {
     std::vector<std::string> lineByLine = split(mapString, '\n');
     for(int i=0; i<lineByLine.size(); i++) {
         std::vector<std::string> csv = split(lineByLine[i], ',');
-        std::cout << "{" << csv.size() << "}";
         if(csv.size() == 2) {
             staticGame.backgroundCircles.push_back(sf::Vector2f(stof(csv[0]), stof(csv[1])));
         }
@@ -117,4 +115,8 @@ std::vector<std::string> ClientGame::split(const std::string s, char delim) {
 
 void ClientGame::clearGameState() {
     staticGame.backgroundCircles.clear();
+}
+
+long long ClientGame::getTime() {
+    return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 }

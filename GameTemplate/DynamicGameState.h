@@ -10,9 +10,10 @@
 #define __GameTemplate__DynamicGameState__
 
 #include <stdio.h>
+#include <SFML/Graphics.hpp>
 
 struct DynamicGameState {
-    int x = 0;
+    std::vector<sf::Vector2f> players;
 };
 
 #endif /* defined(__GameTemplate__DynamicGameState__) */

@@ -24,8 +24,6 @@ struct ClientCommunicator {
     std::vector<unsigned short>connectToServerTcpPort;
     std::vector<std::string>connectToServerUsername;
     unsigned short tcpPortOfLocalServer = 0;
-    
-    std::vector<std::string>debug;
 };
 
 #endif /* defined(__GameTemplate__ClientCommunicator__) */

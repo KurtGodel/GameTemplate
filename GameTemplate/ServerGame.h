@@ -15,6 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include "ResourcePath.hpp"
 #include "ServerBaseClass.h"
 #include "StaticGameState.h"
@@ -24,21 +25,26 @@ class ServerGame {
 public:
     ServerGame(ServerBaseClass &serverBaseClass);
     ~ServerGame();
-    void startGame(std::string mapName, std::vector<std::vector<std::string>>teams);
+    void startGame(std::string mapName, std::vector<std::vector<std::string>>teamList);
+    void think();
     void receivedTcpMessage(std::string message, std::string username);
     void receivedUdpMessage(std::string message, std::string username);
 private:
+    std::vector<std::vector<std::string>>teams;
+    StaticGameState staticGame;
+    std::vector<DynamicGameState> gameHistory;
+    std::string mapName = "";
     ServerBaseClass *parentApp;
+    
     std::vector<std::string> split(const std::string s, char delim);
     std::string readFile(std::string fileName);
     void sendTcpMessage(std::string message, std::string username);
     void sendUdpMessage(std::string message, std::string username);
     void loadMap(std::string newMapName);
     void clearGameState();
-    
-    StaticGameState staticGame;
-    std::vector<DynamicGameState> gameHistory;
-    std::string mapName = "";
+    std::string createMessageForTeam(unsigned int i);
+    void keyDown(long long timeStamp, int keyCode, std::string username);
+    long long getTime();
 };
 
 #endif /* defined(__GameTemplate__ServerGame__) */

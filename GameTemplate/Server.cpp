@@ -26,6 +26,10 @@ void Server::run() {
         }
     }
     
+    if(isGameOccuring) {
+        game.think();
+    }
+    
     // sleep for 100 milliseconds
     struct timespec tim, tim2;
     tim.tv_sec = 0;
@@ -41,7 +45,7 @@ void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
     }
     
     if(isGameOccuring) {
-        std::string name;
+        std::string name = "";
         for(int i=0; i<tableOfClients.size(); i++) {
             if(tableOfClients[i].tcpSocket == socket) {
                 name = tableOfClients[i].username;
