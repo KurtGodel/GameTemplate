@@ -16,16 +16,16 @@ ServerGame::~ServerGame() {
 }
 
 void ServerGame::startGame(std::string mapName, std::vector<std::vector<std::string>>teamList) {
-    teams = teamList;
     clearGameState();
     loadMap(mapName);
+    initalizeDynamicState(teamList);
 }
 
 void ServerGame::think() {
-    for(unsigned int i=0; i<teams.size(); i++) {
+    for(unsigned int i=0; i<dynamicGame[dynamicGame.size()-1].players.size(); i++) {
         std::string message = createMessageForTeam(i);
-        for(unsigned int j=0; j<teams[i].size(); j++) {
-            sendTcpMessage(message, teams[i][j]);
+        for(unsigned int j=0; j<dynamicGame[dynamicGame.size()-1].players[i].size(); j++) {
+            sendUdpMessage(message, dynamicGame[dynamicGame.size()-1].players[i][j].username);
         }
     }
     
@@ -39,7 +39,23 @@ void ServerGame::think() {
 }
 
 std::string ServerGame::createMessageForTeam(unsigned int i) {
-    return "";
+    std::string rtn = "";
+    for(int i=0; i<dynamicGame[dynamicGame.size()-1].players.size(); i++) {
+        if(i != 0) {
+            rtn += "\n";
+        }
+        for(int j=0; j<dynamicGame[dynamicGame.size()-1].players[i].size(); j++) {
+            if(j != 0) {
+                rtn += ";";
+            }
+            rtn += dynamicGame[dynamicGame.size()-1].players[i][j].username;
+            rtn += ",";
+            rtn += std::to_string(dynamicGame[dynamicGame.size()-1].players[i][j].x);
+            rtn += ",";
+            rtn += std::to_string(dynamicGame[dynamicGame.size()-1].players[i][j].y);
+        }
+    }
+    return rtn;
 }
 
 void ServerGame::receivedTcpMessage(std::string message, std::string username) {
@@ -69,6 +85,24 @@ void ServerGame::keyDown(long long timeStamp, int keyCode, std::string username)
     for(int i=0; i<dynamicGame.size(); i++) {
         if(timeStamp > dynamicGame[i].timeStamp) {
             // this frame happened after the event - it should be altered
+            for(int j=0; j<dynamicGame[i].players.size(); j++) {
+                for(int k=0; k<dynamicGame[i].players[j].size(); k++) {
+                    if(dynamicGame[i].players[j][k].username == username) {
+                        if(keyCode == sf::Keyboard::Up) {
+                            dynamicGame[i].players[j][k].y -= 20;
+                        }
+                        else if(keyCode == sf::Keyboard::Down) {
+                            dynamicGame[i].players[j][k].y += 20;
+                        }
+                        else if(keyCode == sf::Keyboard::Right) {
+                            dynamicGame[i].players[j][k].x += 20;
+                        }
+                        else if(keyCode == sf::Keyboard::Left) {
+                            dynamicGame[i].players[j][k].x -= 20;
+                        }
+                    }
+                }
+            }
         }
     }
     std::cout << getTime()-timeStamp << "\n";
@@ -126,4 +160,17 @@ void ServerGame::clearGameState() {
 
 long long ServerGame::getTime() {
     return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void ServerGame::initalizeDynamicState(std::vector<std::vector<std::string>> teamList) {
+    dynamicGame.push_back(DynamicGameState());
+    for(int i=0; i<teamList.size(); i++) {
+        dynamicGame[0].players.push_back(std::vector<Player>());
+        for(int j=0; j<teamList[i].size(); j++) {
+            dynamicGame[0].players[i].push_back(Player());
+            dynamicGame[0].players[i][j].username = teamList[i][j];
+            dynamicGame[0].players[i][j].x = 0;
+            dynamicGame[0].players[i][j].y = 0;
+        }
+    }
 }

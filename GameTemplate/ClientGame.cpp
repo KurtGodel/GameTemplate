@@ -32,6 +32,7 @@ void ClientGame::receivedTcpMessage(std::string message) {
 }
 
 void ClientGame::receivedUdpMessage(std::string message) {
+    updateDynamicGameFromServerMessage(message);
 }
 
 void ClientGame::sendTcpMessage(std::string message) {
@@ -52,6 +53,14 @@ void ClientGame::draw() {
         circle.setPosition(staticGame.backgroundCircles[i]);
         circle.setFillColor(sf::Color(100, 250, 50));
         window->draw(circle);
+    }
+    for(int i=0; i<dynamicGame.players.size(); i++) {
+        for(int j=0; j<dynamicGame.players[i].size(); j++) {
+            sf::CircleShape circle = sf::CircleShape(30);
+            circle.setPosition(sf::Vector2f(dynamicGame.players[i][j].x, dynamicGame.players[i][j].y));
+            circle.setFillColor(sf::Color(255, 128, 128));
+            window->draw(circle);
+        }
     }
 }
 
@@ -119,4 +128,28 @@ void ClientGame::clearGameState() {
 
 long long ClientGame::getTime() {
     return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void ClientGame::updateDynamicGameFromServerMessage(std::string str) {
+    // clear game state
+    dynamicGame.players.clear();
+    
+    std::vector<std::string> teams = split(str, '\n');
+    for(int i=0; i<teams.size(); i++) {
+        dynamicGame.players.push_back(std::vector<Player>());
+        std::vector<std::string> players = split(teams[i], ';');
+        for(int j=0; j<players.size(); j++) {
+            dynamicGame.players[i].push_back(Player());
+            updatePlayer(&dynamicGame.players[i][j], split(players[j], ','));
+        }
+    }
+}
+
+void ClientGame::updatePlayer(Player *player, std::vector<std::string> arr) {
+    if(arr.size() != 3) {
+        return;
+    }
+    player->username = arr[0];
+    player->x = stof(arr[1]);
+    player->y = stof(arr[2]);
 }

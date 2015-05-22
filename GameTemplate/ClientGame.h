@@ -51,6 +51,8 @@ private:
     void clearGameState();
     long long getTime();
     std::vector<std::string> split(const std::string s, char delim);
+    void updateDynamicGameFromServerMessage(std::string str);
+    void updatePlayer(Player *player, std::vector<std::string> arr);
 };
 
 #endif /* defined(__GameTemplate__ClientGame__) */

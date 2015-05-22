@@ -11,10 +11,11 @@
 
 #include <stdio.h>
 #include <SFML/Graphics.hpp>
+#include "Player.h"
 
 struct DynamicGameState {
     long long timeStamp;
-    std::vector<sf::Vector2f> players;
+    std::vector<std::vector<Player>> players;
 };
 
 #endif /* defined(__GameTemplate__DynamicGameState__) */

@@ -81,6 +81,7 @@
 		28F2AD3D1B0B71F600459DEE /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		28F2AD401B0B724900459DEE /* ClientCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientCommunicator.h; sourceTree = "<group>"; };
 		28F2AD431B0B8F1900459DEE /* ClientServerCommunicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClientServerCommunicator.h; sourceTree = "<group>"; };
+		28F58E2A1B0F8DC600C7BBE4 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +104,7 @@
 				283AC8D01B0EC01500DE6E6A /* ServerGame.h */,
 				28C0C4B91B0ECED0006ADBA5 /* StaticGameState.h */,
 				28C0C4BC1B0ECF60006ADBA5 /* DynamicGameState.h */,
+				28F58E2A1B0F8DC600C7BBE4 /* Player.h */,
 			);
 			name = Game;
 			sourceTree = "<group>";

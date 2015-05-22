@@ -43,6 +43,8 @@ private:
     void heardFromClient(sf::TcpSocket *socket);
     void logOutUser(sf::TcpSocket *socket);
     std::vector<std::string> split(const std::string s, char delim);
+    
+    std::string makeAlphaNumeric(std::string str);
 };
 
 #endif /* defined(__GameTemplate__Server__) */

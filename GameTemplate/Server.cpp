@@ -101,6 +101,7 @@ void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
         // remote client sent the message
         if(arr[0] == "Give UDP Socket" && arr.size() >= 3) {
             // give new client UDP port number
+            arr[1] = makeAlphaNumeric(arr[1]);
             if(isUsernameUnique(arr[1])) {
                 // username is unique; send UDP port back
                 tableOfClients.push_back(ClientOfServer());
@@ -198,7 +199,7 @@ bool Server::isUsernameUnique(std::string name) {
             return false;
         }
     }
-    if(name == "SERVER") {
+    if(name == "SERVER" || name == "") {
         return false;
     }
     return true;
@@ -290,7 +291,24 @@ void Server::sendTcpMessage(std::string message, std::string username) {
 void Server::sendUdpMessage(std::string message, std::string username) {
     for(int i=0; i<tableOfClients.size(); i++) {
         if(tableOfClients[i].username == username) {
-            sendUdp(message, tableOfClients[i].tcpSocket->getRemoteAddress(), tableOfClients[i].tcpSocket->getRemotePort());
+            if(username == "SERVER") {
+                sendUdp(message, "0.0.0.0", 0);
+            }
+            else {
+                sendUdp(message, tableOfClients[i].tcpSocket->getRemoteAddress(), tableOfClients[i].tcpSocket->getRemotePort());
+            }
         }
     }
+}
+
+bool isNotAlphaNumeric(char c) {
+    if(isalnum(c) == 0) {
+        return true;
+    }
+    return false;
+}
+
+std::string Server::makeAlphaNumeric(std::string str) {
+    str.erase(std::remove_if(str.begin(), str.end(), isNotAlphaNumeric), str.end());
+    return str;
 }

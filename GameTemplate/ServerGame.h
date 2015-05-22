@@ -30,7 +30,6 @@ public:
     void receivedTcpMessage(std::string message, std::string username);
     void receivedUdpMessage(std::string message, std::string username);
 private:
-    std::vector<std::vector<std::string>>teams;
     StaticGameState staticGame;
     std::vector<DynamicGameState> dynamicGame; // history vector
     std::string mapName = "";
@@ -45,6 +44,7 @@ private:
     std::string createMessageForTeam(unsigned int i);
     void keyDown(long long timeStamp, int keyCode, std::string username);
     long long getTime();
+    void initalizeDynamicState(std::vector<std::vector<std::string>> teamList);
 };
 
 #endif /* defined(__GameTemplate__ServerGame__) */
