@@ -443,5 +443,8 @@ std::vector<std::string> MainMenu::split(const std::string s, char delim) {
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
+    if(s[s.length()-1] == delim) {
+        elems.push_back("");
+    }
     return elems;
 }

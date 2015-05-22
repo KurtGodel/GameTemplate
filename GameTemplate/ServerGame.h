@@ -41,7 +41,7 @@ private:
     void sendUdpMessage(std::string message, std::string username);
     void loadMap(std::string newMapName);
     void clearGameState();
-    std::string createMessageForTeam(unsigned int i);
+    std::string createMessageForTeam(unsigned int teamNum);
     void keyDown(long long timeStamp, int keyCode, std::string username);
     long long getTime();
     void initalizeDynamicState(std::vector<std::vector<std::string>> teamList);

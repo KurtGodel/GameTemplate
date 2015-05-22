@@ -32,6 +32,7 @@ void ClientGame::receivedTcpMessage(std::string message) {
 }
 
 void ClientGame::receivedUdpMessage(std::string message) {
+    std::cout << "(" << message << ")\n";
     updateDynamicGameFromServerMessage(message);
 }
 

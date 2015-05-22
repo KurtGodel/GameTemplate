@@ -77,17 +77,14 @@ void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
             sendTcpMessageToAllClients("CHAT MESSAGE\n"+chatMessages[chatMessages.size()-1]);
         }
         else if(arr[0] == "Join No Team") {
-            sendTcpMessageToAllClients("CHAT MESSAGE\nGAME: SERVER joined No Team");
             changeTeamOfClient("SERVER", 0);
             sendListOfTeamsToAllClients();
         }
         else if(arr[0] == "Join Team 1") {
-            sendTcpMessageToAllClients("CHAT MESSAGE\nGAME: SERVER joined Team 1");
             changeTeamOfClient("SERVER", 1);
             sendListOfTeamsToAllClients();
         }
         else if(arr[0] == "Join Team 2") {
-            sendTcpMessageToAllClients("CHAT MESSAGE\nGAME: SERVER joined Team 2");
             changeTeamOfClient("SERVER", 2);
             sendListOfTeamsToAllClients();
         }
@@ -143,7 +140,7 @@ void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
                 for(int i=0; i<tableOfClients.size(); i++) {
                     if(tableOfClients[i].tcpSocket == socket) {
                         sendTcpMessageToAllClients("CHAT MESSAGE\nGAME: " + tableOfClients[i].username + " joined Team 1");
-                        changeTeamOfClient(tableOfClients[i].username, 0);
+                        changeTeamOfClient(tableOfClients[i].username, 1);
                         sendListOfTeamsToAllClients();
                         break;
                     }
@@ -153,7 +150,7 @@ void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
                 for(int i=0; i<tableOfClients.size(); i++) {
                     if(tableOfClients[i].tcpSocket == socket) {
                         sendTcpMessageToAllClients("CHAT MESSAGE\nGAME: " + tableOfClients[i].username + " joined Team 2");
-                        changeTeamOfClient(tableOfClients[i].username, 0);
+                        changeTeamOfClient(tableOfClients[i].username, 2);
                         sendListOfTeamsToAllClients();
                         break;
                     }
@@ -209,7 +206,6 @@ void Server::sendTcpMessageToAllClients(std::string message) {
     for(int i=0; i<tableOfClients.size(); i++) {
         sendTcp(message, tableOfClients[i].tcpSocket);
     }
-    sendTcp(message, nullptr);
 }
 
 void Server::changeTeamOfClient(std::string username, int newTeam) {
@@ -235,11 +231,9 @@ void Server::changeTeamOfClient(std::string username, int newTeam) {
 }
 
 void Server::sendListOfTeamsToAllClients() {
-    std::string message = "TEAM LIST\n";
+    std::string message = "TEAM LIST";
     for(int i=0; i<teams.size(); i++) {
-        if(i != 0) {
-            message += "\n";
-        }
+        message += "\n";
         for(int j=0; j<teams[i].size(); j++) {
             if(j != 0) {
                 message += "\t";
@@ -295,7 +289,7 @@ void Server::sendUdpMessage(std::string message, std::string username) {
                 sendUdp(message, "0.0.0.0", 0);
             }
             else {
-                sendUdp(message, tableOfClients[i].tcpSocket->getRemoteAddress(), tableOfClients[i].tcpSocket->getRemotePort());
+                sendUdp(message, tableOfClients[i].tcpSocket->getRemoteAddress(), tableOfClients[i].udpPort);
             }
         }
     }

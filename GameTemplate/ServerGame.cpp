@@ -38,7 +38,7 @@ void ServerGame::think() {
     }
 }
 
-std::string ServerGame::createMessageForTeam(unsigned int i) {
+std::string ServerGame::createMessageForTeam(unsigned int teamNum) {
     std::string rtn = "";
     for(int i=0; i<dynamicGame[dynamicGame.size()-1].players.size(); i++) {
         if(i != 0) {
