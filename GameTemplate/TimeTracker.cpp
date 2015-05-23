@@ -71,6 +71,10 @@ long long TimeTracker::findMedian(std::vector<long long> arr) {
 }
 
 void TimeTracker::update() {
+    if(users.size() == 0) {
+        return;
+    }
+    
     if(getTime()-users[clientNum].timeOfLastMessageSent > 1000) {
         // its been too long since we've sent a PING
         users[clientNum].timeOfLastMessageSent = getTime();

@@ -49,12 +49,8 @@ void ServerGame::startGame(std::string mapName, std::vector<std::vector<std::str
 }
 
 void ServerGame::think() {
-    // apply player actions
-    for(int i=0; i<teams.size(); i++) {
-        for(int j=0; j<teams[i].size(); j++) {
-            applyInputsToWorld(teams[i][j]);
-        }
-    }
+    // apply player actions to world and history
+    applyInputsToWorld();
     
     // send info back to players
     for(int i=0; i<teams.size(); i++) {
@@ -68,9 +64,11 @@ void ServerGame::think() {
     timeTracker.update();
     
     // update history vector
-    history.push_back(players);
-    if(history.size() > 40) {
-        history.erase(history.begin(), history.begin()+1);
+    playerHistory.push_back(players);
+    deltaTimeHistory.push_back(timeTracker.getDeltaTime());
+    if(playerHistory.size() > 40) {
+        playerHistory.erase(playerHistory.begin(), playerHistory.begin()+1);
+        deltaTimeHistory.erase(deltaTimeHistory.begin(), deltaTimeHistory.begin()+1);
     }
 }
 
@@ -94,9 +92,44 @@ std::string ServerGame::createMessageForTeam(int teamNum) {
     return message;
 }
 
-std::string ServerGame::applyInputsToWorld(std::string username) {
-    if(players[username].input.up) {
-        players[username].x += timeTracker.getDeltaTime()/1000.0*100.0;
+std::string ServerGame::applyInputsToWorld() {
+    for(int i=0; i<playerHistory.size(); i++) {
+        for(int j=0; j<teams.size(); j++) {
+            for(int k=0; k<teams[j].size(); k++) {
+                int time = getTime();
+                if(players[teams[j][k]].input.timeStamp >= time) {
+                    if(players[teams[j][k]].input.up) {
+                        playerHistory[i][teams[j][k]].y -= deltaTimeHistory[i]/1000.0*100.0;
+                    }
+                    if(players[teams[j][k]].input.down) {
+                        playerHistory[i][teams[j][k]].y += deltaTimeHistory[i]/1000.0*100.0;
+                    }
+                    if(players[teams[j][k]].input.right) {
+                        playerHistory[i][teams[j][k]].x += deltaTimeHistory[i]/1000.0*100.0;
+                    }
+                    if(players[teams[j][k]].input.left) {
+                        playerHistory[i][teams[j][k]].y += deltaTimeHistory[i]/1000.0*100.0;
+                    }
+                }
+            }
+        }
+    }
+    
+    for(int i=0; i<teams.size(); i++) {
+        for(int j=0; j<teams[i].size(); j++) {
+            if(players[teams[i][j]].input.up) {
+                players[teams[i][j]].y -= timeTracker.getDeltaTime()/1000.0*100.0;
+            }
+            if(players[teams[i][j]].input.down) {
+                players[teams[i][j]].y += timeTracker.getDeltaTime()/1000.0*100.0;
+            }
+            if(players[teams[i][j]].input.right) {
+                players[teams[i][j]].x += timeTracker.getDeltaTime()/1000.0*100.0;
+            }
+            if(players[teams[i][j]].input.left) {
+                players[teams[i][j]].x -= timeTracker.getDeltaTime()/1000.0*100.0;
+            }
+        }
     }
 }
 
@@ -122,7 +155,29 @@ void ServerGame::receivedTcpMessage(std::string message, std::string username) {
     else if(message.size() > 5 && message.substr(0,5) == "INPUT") {
         std::vector<std::string> arr = split(message, '\n');
         if(arr.size() == 3) {
-            players[username].input.fromString(arr[2]);
+            long long timeStamp = timeTracker.fromClientTimeToServerTime(stoll(arr[1]), username);
+            if(timeStamp >= players[username].input.timeStamp) {
+                players[username].input.fromString(arr[2]);
+            }
+        }
+    }
+    else if(message.size() > 5 && message.substr(0,5) == "SHOOT") {
+        std::vector<std::string> arr = split(message, '\n');
+        if(arr.size() == 3) {
+            std::vector<std::string> xy = split(arr[2], ',');
+            long long timeStamp = timeTracker.fromClientTimeToServerTime(stoll(arr[1]), username);
+            shoot(username, timeStamp, stod(xy[0]), stod(xy[1]));
+        }
+    }
+}
+
+void ServerGame::shoot(std::string username, long long timeStamp, double x, double y) {
+    for(int i=0; i<teams.size(); i++) {
+        for(int j=0; j<teams[i].size(); j++) {
+            double distSq = (players[teams[i][j]].x - x)*(players[teams[i][j]].x - x) + (players[teams[i][j]].y - y)*(players[teams[i][j]].y - y);
+            if(distSq < 10000) {
+                players[teams[i][j]].x = 0;
+            }
         }
     }
 }

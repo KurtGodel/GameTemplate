@@ -103,6 +103,7 @@ void ClientGame::mouseMove(sf::Event::MouseMoveEvent event) {
 }
 
 void ClientGame::mouseDown(sf::Event::MouseButtonEvent event) {
+    sendTcpMessage("SHOOT\n" + std::to_string(getTime()) + "\n" + std::to_string(event.x) + "," + std::to_string(event.y));
 }
 
 void ClientGame::mouseUp(sf::Event::MouseButtonEvent event) {

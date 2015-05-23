@@ -41,7 +41,8 @@ private:
     std::string mapName = "";
     ServerBaseClass *parentApp;
     std::unordered_map<std::string, ServerPlayer> players;
-    std::vector<std::unordered_map<std::string, ServerPlayer>> history;
+    std::vector<std::unordered_map<std::string, ServerPlayer>> playerHistory;
+    std::vector<long long>deltaTimeHistory;
     std::vector<std::vector<std::string>> teams;
     
     
@@ -54,7 +55,8 @@ private:
     void move(long long timeStamp, float deltaX, float deltaY, std::string username);
     long long getTime();
     std::string createMessageForTeam(int teamNum);
-    std::string applyInputsToWorld(std::string username);
+    std::string applyInputsToWorld();
+    void shoot(std::string username, long long timeStamp, double x, double y);
 };
 
 #endif /* defined(__GameTemplate__ServerGame__) */
