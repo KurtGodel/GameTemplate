@@ -10,7 +10,6 @@
 
 App::App(sf::RenderWindow &w, ClientCommunicator &clientCommunicator) : mainMenu(w, *this), AppBaseClass(clientCommunicator), game(w, *this) {
     connectToServer("", "0.0.0.0", 0);
-    lastAliveMessageSent = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 App::~App() {
@@ -20,10 +19,6 @@ void App::think() {
     // keep sending "george"
     
     long long ms = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
-    if(ms - lastAliveMessageSent >= 500) {
-        sendTcp("ALIVE");
-        lastAliveMessageSent = ms;
-    }
     if(isShowingMainMenu) {
         mainMenu.think();
     }
@@ -115,7 +110,7 @@ void App::receivedTcpMessage(std::string message) {
             }
             else if(arr[0] == "LAUNCHING GAME") {
                 isShowingMainMenu = false;
-                game.startGame();
+                game.startGame(username);
             }
             else {
                 // handle other messages
@@ -173,6 +168,9 @@ std::string App::sendMeMessage(std::string message) {
     }
     else if(arr[0] == "Launch Game") {
         sendTcp("LAUNCH GAME");
+    }
+    else if(arr[0] == "Matchmakign Server") {
+        username = "SERVER";
     }
 }
 

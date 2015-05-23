@@ -15,7 +15,6 @@
 struct ClientOfServer {
     std::string username;
     sf::TcpSocket *tcpSocket;
-    long long timeOfLastTcpMessage;
     unsigned short udpPort = 0;
 };
 

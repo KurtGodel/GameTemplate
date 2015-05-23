@@ -40,7 +40,6 @@ private:
     void sendTcpMessageToAllClients(std::string message);
     void sendListOfTeamsToAllClients();
     void changeTeamOfClient(std::string username, int newTeam);
-    void heardFromClient(sf::TcpSocket *socket);
     void logOutUser(sf::TcpSocket *socket);
     std::vector<std::string> split(const std::string s, char delim);
     

@@ -8,7 +8,27 @@
 
 #include "ServerGame.h"
 
-ServerGame::ServerGame(ServerBaseClass &serverBaseClass) {
+/*
+ All messages take the form
+ {message type}
+ {time stamp}
+ {contents of message}
+ 
+ 
+ EXAPLES FROM CLIENT (TO SERVER)
+    WHICH MAP
+    1432407479521
+ 
+    PING
+    1432407479521
+    1432407475521
+ 
+ EXAMPLES FROM SERVER (TO CLIENT):
+    PING
+    1432407479521
+*/
+
+ServerGame::ServerGame(ServerBaseClass &serverBaseClass) : timeTracker(serverBaseClass) {
     parentApp = &serverBaseClass;
 }
 
@@ -16,107 +36,113 @@ ServerGame::~ServerGame() {
 }
 
 void ServerGame::startGame(std::string mapName, std::vector<std::vector<std::string>>teamList) {
-    clearGameState();
     loadMap(mapName);
-    initalizeDynamicState(teamList);
+    std::vector<std::string> listOfPlayers;
+    teams = teamList;
+    for(int i=0; i<teams.size(); i++) {
+        for(int j=0; j<teams[i].size(); j++) {
+            players[teams[i][j]] = ServerPlayer();
+            listOfPlayers.push_back(teams[i][j]);
+        }
+    }
+    timeTracker.start(listOfPlayers);
 }
 
 void ServerGame::think() {
-    for(unsigned int i=0; i<dynamicGame[dynamicGame.size()-1].players.size(); i++) {
-        std::string message = createMessageForTeam(i);
-        for(unsigned int j=0; j<dynamicGame[dynamicGame.size()-1].players[i].size(); j++) {
-            sendUdpMessage(message, dynamicGame[dynamicGame.size()-1].players[i][j].username);
+    // apply player actions
+    for(int i=0; i<teams.size(); i++) {
+        for(int j=0; j<teams[i].size(); j++) {
+            applyInputsToWorld(teams[i][j]);
         }
     }
     
-    // update dynamicGame history
-    DynamicGameState copyOfCurrentGameState = dynamicGame[dynamicGame.size()-1];
-    copyOfCurrentGameState.timeStamp = getTime();
-    dynamicGame.push_back(copyOfCurrentGameState);
-    if(dynamicGame.size() > 20) {
-        dynamicGame.erase(dynamicGame.begin()+dynamicGame.size()-1,dynamicGame.begin()+dynamicGame.size());
+    // send info back to players
+    for(int i=0; i<teams.size(); i++) {
+        std::string teamMessage = createMessageForTeam(i);
+        for(int j=0; j<teams[i].size(); j++) {
+            sendUdpMessage("UPDATE\n" + std::to_string(timeTracker.getClientTime(teams[i][j])) + "\n" + teamMessage, teams[i][j]);
+        }
+    }
+    
+    // let timeTranslator update itself
+    timeTracker.update();
+    
+    // update history vector
+    history.push_back(players);
+    if(history.size() > 40) {
+        history.erase(history.begin(), history.begin()+1);
     }
 }
 
-std::string ServerGame::createMessageForTeam(unsigned int teamNum) {
-    std::string rtn = "";
-    for(int i=0; i<dynamicGame[dynamicGame.size()-1].players.size(); i++) {
+std::string ServerGame::createMessageForTeam(int teamNum) {
+    std::string message = "";
+    for(int i=0; i<teams.size(); i++) {
         if(i != 0) {
-            rtn += "\n";
+            message += "|";
         }
-        for(int j=0; j<dynamicGame[dynamicGame.size()-1].players[i].size(); j++) {
+        for(int j=0; j<teams[i].size(); j++) {
             if(j != 0) {
-                rtn += ";";
+                message += ";";
             }
-            rtn += dynamicGame[dynamicGame.size()-1].players[i][j].username;
-            rtn += ",";
-            rtn += std::to_string(dynamicGame[dynamicGame.size()-1].players[i][j].x);
-            rtn += ",";
-            rtn += std::to_string(dynamicGame[dynamicGame.size()-1].players[i][j].y);
+            message += teams[i][j];
+            message += ",";
+            message += std::to_string(players[teams[i][j]].x);
+            message += ",";
+            message += std::to_string(players[teams[i][j]].y);
         }
     }
-    return rtn;
+    return message;
+}
+
+std::string ServerGame::applyInputsToWorld(std::string username) {
+    if(players[username].input.up) {
+        players[username].x += timeTracker.getDeltaTime()/1000.0*100.0;
+    }
 }
 
 void ServerGame::receivedTcpMessage(std::string message, std::string username) {
     if(message == "WHICH MAP") {
-        sendTcpMessage("START GAME\n" + mapName, username);
+        std::string teamsString = "";
+        for(int i=0; i<teams.size(); i++) {
+            if(i != 0) {
+                teamsString += ";";
+            }
+            for(int j=0; j<teams[i].size(); j++) {
+                if(j != 0) {
+                    teamsString += ",";
+                }
+                teamsString += teams[i][j];
+            }
+        }
+        sendTcpMessage("START GAME\n" + std::to_string(timeTracker.getClientTime(username)) + "\n" + mapName + "|" + teamsString, username);
+    }
+    else if(message.size() > 4 && message.substr(0,4) == "PING") {
+        timeTracker.receivedMesage(message, username);
+    }
+    else if(message.size() > 5 && message.substr(0,5) == "INPUT") {
+        std::vector<std::string> arr = split(message, '\n');
+        if(arr.size() == 3) {
+            players[username].input.fromString(arr[2]);
+        }
     }
 }
 
 void ServerGame::receivedUdpMessage(std::string message, std::string username) {
     std::vector<std::string> arr = split(message, '\n');
-    if(arr.size() == 0) {
+    if(arr.size() < 3) {
         return;
     }
-    
-    /*
-     Format of Inputs:
-     event type: KEY DOWN
-     milliseconds since 1970: 1432268103
-     paramters of event: 15
-     */
-    if(arr[0] == "KEY DOWN" && arr.size() >= 3) {
-        keyDown(stoll(arr[1]), stoi(arr[2]), username);
-    }
-}
-
-void ServerGame::keyDown(long long timeStamp, int keyCode, std::string username) {
-    for(int i=0; i<dynamicGame.size(); i++) {
-        if(timeStamp > dynamicGame[i].timeStamp) {
-            // this frame happened after the event - it should be altered
-            for(int j=0; j<dynamicGame[i].players.size(); j++) {
-                for(int k=0; k<dynamicGame[i].players[j].size(); k++) {
-                    if(dynamicGame[i].players[j][k].username == username) {
-                        if(keyCode == sf::Keyboard::Up) {
-                            dynamicGame[i].players[j][k].y -= 20;
-                        }
-                        else if(keyCode == sf::Keyboard::Down) {
-                            dynamicGame[i].players[j][k].y += 20;
-                        }
-                        else if(keyCode == sf::Keyboard::Right) {
-                            dynamicGame[i].players[j][k].x += 20;
-                        }
-                        else if(keyCode == sf::Keyboard::Left) {
-                            dynamicGame[i].players[j][k].x -= 20;
-                        }
-                    }
-                }
-            }
+    if(arr[0] == "INPUT") {
+        long long timeStampInServerTime = timeTracker.fromClientTimeToServerTime(players[username].input.timeStamp, username);
+        if(stoll(arr[1]) > timeStampInServerTime) {
+            players[username].input.timeStamp = timeStampInServerTime;
+            players[username].input.fromString(arr[2]);
         }
     }
-    std::cout << getTime()-timeStamp << "\n";
-}
-
-void ServerGame::sendTcpMessage(std::string message, std::string username) {
-    parentApp->sendTcpMessage(message, username);
-}
-
-void ServerGame::sendUdpMessage(std::string message, std::string username) {
-    parentApp->sendUdpMessage(message, username);
 }
 
 void ServerGame::loadMap(std::string newMapName) {
+    staticGame.backgroundCircles.clear();
     mapName = newMapName;
     std::string mapString = readFile(mapName+".txt");
     std::vector<std::string> lineByLine = split(mapString, '\n');
@@ -126,6 +152,18 @@ void ServerGame::loadMap(std::string newMapName) {
             staticGame.backgroundCircles.push_back(sf::Vector2f(stof(csv[0]), stof(csv[1])));
         }
     }
+}
+
+long long ServerGame::getTime() {
+    return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void ServerGame::sendTcpMessage(std::string message, std::string username) {
+    parentApp->sendTcpMessage(message, username);
+}
+
+void ServerGame::sendUdpMessage(std::string message, std::string username) {
+    parentApp->sendUdpMessage(message, username);
 }
 
 std::string ServerGame::readFile(std::string fileName) {
@@ -151,26 +189,8 @@ std::vector<std::string> ServerGame::split(const std::string s, char delim) {
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
-    return elems;
-}
-
-void ServerGame::clearGameState() {
-    staticGame.backgroundCircles.clear();
-}
-
-long long ServerGame::getTime() {
-    return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
-}
-
-void ServerGame::initalizeDynamicState(std::vector<std::vector<std::string>> teamList) {
-    dynamicGame.push_back(DynamicGameState());
-    for(int i=0; i<teamList.size(); i++) {
-        dynamicGame[0].players.push_back(std::vector<Player>());
-        for(int j=0; j<teamList[i].size(); j++) {
-            dynamicGame[0].players[i].push_back(Player());
-            dynamicGame[0].players[i][j].username = teamList[i][j];
-            dynamicGame[0].players[i][j].x = 0;
-            dynamicGame[0].players[i][j].y = 0;
-        }
+    if(s[s.length()-1] == delim) {
+        elems.push_back("");
     }
+    return elems;
 }

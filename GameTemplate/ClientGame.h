@@ -16,17 +16,20 @@
 #include <sstream>
 #include <iostream>
 #include <chrono>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "ResourcePath.hpp"
 #include "AppBaseClass.h"
+
 #include "StaticGameState.h"
-#include "DynamicGameState.h"
+#include "InputTracker.h"
+#include "ClientPlayer.h"
 
 class ClientGame {
 public:
     ClientGame(sf::RenderWindow &w, AppBaseClass &appBaseClass);
     ~ClientGame();
-    void startGame();
+    void startGame(std::string userName);
     void receivedTcpMessage(std::string message);
     void receivedUdpMessage(std::string message);
     void sendTcpMessage(std::string message);
@@ -44,15 +47,19 @@ private:
     sf::RenderWindow *window;
     std::string mapName;
     StaticGameState staticGame;
-    DynamicGameState dynamicGame;
+    std::string myUserName = "";
+    InputTracker input;
+    
+    std::unordered_map<std::string, ClientPlayer> players;
+    std::vector<std::vector<std::string>> teams;
     
     std::string readFile(std::string fileName);
     void loadMap(std::string newMapName);
     void clearGameState();
     long long getTime();
     std::vector<std::string> split(const std::string s, char delim);
-    void updateDynamicGameFromServerMessage(std::string str);
-    void updatePlayer(Player *player, std::vector<std::string> arr);
+    void loadPlayers(std::string teamsString);
+    void updateWorld(std::string messageFromServer, long long lag);
 };
 
 #endif /* defined(__GameTemplate__ClientGame__) */

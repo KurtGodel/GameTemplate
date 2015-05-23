@@ -16,7 +16,8 @@ ClientGame::ClientGame(sf::RenderWindow &w, AppBaseClass &appBaseClass) {
 ClientGame::~ClientGame() {
 }
 
-void ClientGame::startGame() {
+void ClientGame::startGame(std::string userName) {
+    myUserName = userName;
     clearGameState();
     sendTcpMessage("WHICH MAP");
 }
@@ -26,14 +27,43 @@ void ClientGame::receivedTcpMessage(std::string message) {
     if(arr.size() == 0) {
         return;
     }
-    if(arr[0] == "START GAME" && arr.size() >= 2) {
-        loadMap(arr[1]);
+    if(arr[0] == "START GAME" && arr.size() >= 3) {
+        long long timeStamp = stoll(arr[1]);
+        std::vector<std::string> arr2 = split(arr[2], '|');
+        loadMap(arr2[0]);
+        loadPlayers(arr2[1]);
+    }
+    else if(arr[0] == "PING") {
+        message += "\n";
+        message += std::to_string(getTime());
+        sendTcpMessage(message);
     }
 }
 
 void ClientGame::receivedUdpMessage(std::string message) {
-    std::cout << "(" << message << ")\n";
-    updateDynamicGameFromServerMessage(message);
+    std::vector<std::string> arr = split(message, '\n');
+    if(arr.size() == 0) {
+        return;
+    }
+    if(arr[0] == "UPDATE" && arr.size() >= 3) {
+        long long timeStamp = stoll(arr[1]);
+        long long lag = getTime() - timeStamp;
+        updateWorld(arr[2], lag);
+    }
+}
+
+void ClientGame::updateWorld(std::string messageFromServer, long long lag) {
+    std::vector<std::string> teamStrings = split(messageFromServer, '|');
+    for(int i=0; i<teamStrings.size(); i++) {
+        std::vector<std::string> playerStrings = split(teamStrings[i], ';');
+        for(int j=0; j<playerStrings.size(); j++) {
+            std::vector<std::string> arr = split(playerStrings[j], ',');
+            if(arr.size() == 3) {
+                players[arr[0]].x = stod(arr[1]);
+                players[arr[0]].y = stod(arr[2]);
+            }
+        }
+    }
 }
 
 void ClientGame::sendTcpMessage(std::string message) {
@@ -45,6 +75,7 @@ void ClientGame::sendUdpMessage(std::string message) {
 }
 
 void ClientGame::think() {
+    sendUdpMessage("INPUT\n" + std::to_string(getTime()) + "\n" + input.toString());
 }
 
 void ClientGame::draw() {
@@ -55,11 +86,14 @@ void ClientGame::draw() {
         circle.setFillColor(sf::Color(100, 250, 50));
         window->draw(circle);
     }
-    for(int i=0; i<dynamicGame.players.size(); i++) {
-        for(int j=0; j<dynamicGame.players[i].size(); j++) {
-            sf::CircleShape circle = sf::CircleShape(30);
-            circle.setPosition(sf::Vector2f(dynamicGame.players[i][j].x, dynamicGame.players[i][j].y));
-            circle.setFillColor(sf::Color(255, 128, 128));
+    
+    // draw players
+    for(int i=0; i<teams.size(); i++) {
+        for(int j=0; j<teams[i].size(); j++) {
+            sf::CircleShape circle = sf::CircleShape(50);
+            circle.setPosition(staticGame.backgroundCircles[i]);
+            circle.setFillColor(sf::Color(255, 50, 50));
+            circle.setPosition(players[teams[i][j]].x, players[teams[i][j]].y);
             window->draw(circle);
         }
     }
@@ -75,11 +109,33 @@ void ClientGame::mouseUp(sf::Event::MouseButtonEvent event) {
 }
 
 void ClientGame::keyDown(sf::Event::KeyEvent event) {
-    sf::Vector2u screenSize = window->getSize();
-    sendUdpMessage("KEY DOWN\n" + std::to_string(getTime()) + "\n" + std::to_string(event.code));
+    if(event.code == sf::Keyboard::Up) {
+        input.up = true;
+    }
+    if(event.code == sf::Keyboard::Down) {
+        input.down = true;
+    }
+    if(event.code == sf::Keyboard::Left) {
+        input.left = true;
+    }
+    if(event.code == sf::Keyboard::Right) {
+        input.right = true;
+    }
 }
 
 void ClientGame::keyUp(sf::Event::KeyEvent event) {
+    if(event.code == sf::Keyboard::Up) {
+        input.up = false;
+    }
+    if(event.code == sf::Keyboard::Down) {
+        input.down = false;
+    }
+    if(event.code == sf::Keyboard::Left) {
+        input.left = false;
+    }
+    if(event.code == sf::Keyboard::Right) {
+        input.right = false;
+    }
 }
 
 void ClientGame::textEntered(sf::Event::TextEvent event) {
@@ -93,6 +149,25 @@ void ClientGame::loadMap(std::string newMapName) {
         std::vector<std::string> csv = split(lineByLine[i], ',');
         if(csv.size() == 2) {
             staticGame.backgroundCircles.push_back(sf::Vector2f(stof(csv[0]), stof(csv[1])));
+        }
+    }
+}
+
+void ClientGame::loadPlayers(std::string teamsString) {
+    players.clear();
+    teams.clear();
+    std::vector<std::string> arr = split(teamsString, ';');
+    for(int i=0; i<arr.size(); i++) {
+        teams.push_back(std::vector<std::string>());
+        std::vector<std::string> arr2 = split(arr[i], ',');
+        for(int j=0; j<arr2.size(); j++) {
+            teams[i].push_back(arr2[j]);
+        }
+    }
+    
+    for(int i=0; i<teams.size(); i++) {
+        for(int j=0; j<teams[i].size(); j++) {
+            players[teams[i][j]] = ClientPlayer();
         }
     }
 }
@@ -120,6 +195,9 @@ std::vector<std::string> ClientGame::split(const std::string s, char delim) {
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
+    if(s[s.length()-1] == delim) {
+        elems.push_back("");
+    }
     return elems;
 }
 
@@ -129,28 +207,4 @@ void ClientGame::clearGameState() {
 
 long long ClientGame::getTime() {
     return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
-}
-
-void ClientGame::updateDynamicGameFromServerMessage(std::string str) {
-    // clear game state
-    dynamicGame.players.clear();
-    
-    std::vector<std::string> teams = split(str, '\n');
-    for(int i=0; i<teams.size(); i++) {
-        dynamicGame.players.push_back(std::vector<Player>());
-        std::vector<std::string> players = split(teams[i], ';');
-        for(int j=0; j<players.size(); j++) {
-            dynamicGame.players[i].push_back(Player());
-            updatePlayer(&dynamicGame.players[i][j], split(players[j], ','));
-        }
-    }
-}
-
-void ClientGame::updatePlayer(Player *player, std::vector<std::string> arr) {
-    if(arr.size() != 3) {
-        return;
-    }
-    player->username = arr[0];
-    player->x = stof(arr[1]);
-    player->y = stof(arr[2]);
 }

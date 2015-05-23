@@ -63,8 +63,8 @@ int main(int, char const**)
     // Create the fullscreen window
     sf::VideoMode oneValidFullscreenMode = sf::VideoMode::getFullscreenModes()[0];
     sf::RenderWindow window(oneValidFullscreenMode, "SFML window", sf::Style::Fullscreen);
-    window.setFramerateLimit(10);
-
+    window.setFramerateLimit(30);
+    
     // Set the Icon
     sf::Image icon;
     if(!icon.loadFromFile(resourcePath() + "icon.png")) {

@@ -16,7 +16,6 @@ Server::Server(TcpHandlerCommunicator &tcpHandlerCommunicator, ClientServerCommu
     tableOfClients[0].username = "SERVER";
     tableOfClients[0].udpPort = 0;
     tableOfClients[0].tcpSocket = nullptr;
-    tableOfClients[0].timeOfLastTcpMessage = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
 Server::~Server() {
@@ -25,30 +24,20 @@ Server::~Server() {
 void Server::run() {
     long long currentTime = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
     typedef std::map<sf::TcpSocket*, long long>::iterator it_type;
-    for(int i=0; i<tableOfClients.size(); i++) {
-        if(tableOfClients[i].username != "SERVER" && currentTime - tableOfClients[i].timeOfLastTcpMessage > 1500) {
-            logOutUser(tableOfClients[i].tcpSocket);
-        }
-    }
     
     if(isGameOccuring) {
         game.think();
     }
     
-    // sleep for 100 milliseconds
+    // sleep for 10 milliseconds
     struct timespec tim, tim2;
     tim.tv_sec = 0;
-    tim.tv_nsec = 100;
+    tim.tv_nsec = 10;
     tim.tv_nsec *= 1000000;
     nanosleep(&tim , &tim2);
 }
 
 void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
-    heardFromClient(socket);
-    if(message == "ALIVE") {
-        return;
-    }
-    
     if(isGameOccuring) {
         std::string name = "";
         for(int i=0; i<tableOfClients.size(); i++) {
@@ -105,7 +94,6 @@ void Server::receivedTcpMessage(std::string message, sf::TcpSocket *socket) {
                 tableOfClients[tableOfClients.size()-1].username = arr[1];
                 tableOfClients[tableOfClients.size()-1].udpPort = stoi(arr[2]);
                 tableOfClients[tableOfClients.size()-1].tcpSocket = socket;
-                tableOfClients[tableOfClients.size()-1].timeOfLastTcpMessage = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
                 std::string newMessage = "Server UDP Port\n"+std::to_string(getMyUdpPort());
                 sendTcp(newMessage, socket);
             }
@@ -187,6 +175,9 @@ std::vector<std::string> Server::split(const std::string s, char delim) {
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
+    if(s[s.length()-1] == delim) {
+        elems.push_back("");
+    }
     return elems;
 }
 
@@ -242,17 +233,6 @@ void Server::sendListOfTeamsToAllClients() {
         }
     }
     sendTcpMessageToAllClients(message);
-}
-
-void Server::heardFromClient(sf::TcpSocket *socket) {
-    if(socket == nullptr) {
-        return;
-    }
-    for(int i=0; i<tableOfClients.size(); i++) {
-        if(tableOfClients[i].tcpSocket == socket) {
-            tableOfClients[i].timeOfLastTcpMessage = std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
-        }
-    }
 }
 
 void Server::logOutUser(sf::TcpSocket *socket) {

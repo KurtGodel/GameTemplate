@@ -283,6 +283,7 @@ void MainMenu::buttonClicked(int index) {
         }
         else if(pages[pageNum].buttons[index].label == "Matchmaking") {
             pageNum = MainMenuPageName_ServerMatchmaking;
+            parentApp->sendMeMessage("Matchmakign Server");
         }
     }
     else if(pageNum == MainMenuPageName_Matchmaking) {

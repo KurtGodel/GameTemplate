@@ -38,7 +38,6 @@ private:
     std::vector<std::string> split(const std::string s, char delim);
     std::vector<std::string> chat;
     std::string username = "";
-    long long lastAliveMessageSent;
     bool isShowingMainMenu = true;
 };
 

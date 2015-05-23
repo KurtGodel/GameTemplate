@@ -92,7 +92,6 @@ void ServerBaseClass::sendTcp(std::string message, sf::TcpSocket *socket) {
 }
 
 void ServerBaseClass::sendUdp(std::string message, sf::IpAddress ipAddressOfClient, unsigned short portOfClient) {
-    std::cout << "<" << message << "::" << ipAddressOfClient.toString() << "::" << std::to_string(portOfClient) << ">\n";
     if(ipAddressOfClient == "0.0.0.0" || ipAddressOfClient == sf::IpAddress::getLocalAddress()) {
         // send UDP message to local client
         client->lock.lock();
