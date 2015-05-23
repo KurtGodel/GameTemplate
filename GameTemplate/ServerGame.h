@@ -43,6 +43,7 @@ private:
     std::unordered_map<std::string, ServerPlayer> players;
     std::vector<std::unordered_map<std::string, ServerPlayer>> playerHistory;
     std::vector<long long>deltaTimeHistory;
+    std::vector<long long>timeHistory;
     std::vector<std::vector<std::string>> teams;
     
     
@@ -57,6 +58,7 @@ private:
     std::string createMessageForTeam(int teamNum);
     std::string applyInputsToWorld();
     void shoot(std::string username, long long timeStamp, double x, double y);
+    double magnitude(double x, double y);
 };
 
 #endif /* defined(__GameTemplate__ServerGame__) */

@@ -66,9 +66,11 @@ void ServerGame::think() {
     // update history vector
     playerHistory.push_back(players);
     deltaTimeHistory.push_back(timeTracker.getDeltaTime());
+    timeHistory.push_back(getTime());
     if(playerHistory.size() > 40) {
         playerHistory.erase(playerHistory.begin(), playerHistory.begin()+1);
         deltaTimeHistory.erase(deltaTimeHistory.begin(), deltaTimeHistory.begin()+1);
+        timeHistory.erase(timeHistory.begin(), timeHistory.begin()+1);
     }
 }
 
@@ -172,14 +174,28 @@ void ServerGame::receivedTcpMessage(std::string message, std::string username) {
 }
 
 void ServerGame::shoot(std::string username, long long timeStamp, double x, double y) {
-    for(int i=0; i<teams.size(); i++) {
-        for(int j=0; j<teams[i].size(); j++) {
-            double distSq = (players[teams[i][j]].x - x)*(players[teams[i][j]].x - x) + (players[teams[i][j]].y - y)*(players[teams[i][j]].y - y);
-            if(distSq < 10000) {
-                players[teams[i][j]].x = 0;
+    for(int i=0; i<timeHistory.size(); i++) {
+        if(timeStamp < timeHistory[i]) {
+            for(int j=0; j<teams.size(); j++) {
+                for(int k=0; k<teams[j].size(); k++) {
+                    if(magnitude(playerHistory[i][teams[j][k]].x - x, playerHistory[i][teams[j][k]].y - y) < 2500) {
+                        // kill
+                        for(int l=i; l<timeHistory.size(); l++) {
+                            playerHistory[i][teams[j][k]].x = 0;
+                            playerHistory[i][teams[j][k]].y = 0;
+                        }
+                        players[teams[j][k]].x = 0;
+                        players[teams[j][k]].y = 0;
+                    }
+                }
             }
+            break;
         }
     }
+}
+
+double ServerGame::magnitude(double x, double y) {
+    return sqrt(x*x+y*y);
 }
 
 void ServerGame::receivedUdpMessage(std::string message, std::string username) {
