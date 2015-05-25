@@ -58,6 +58,7 @@ long long TimeTracker::fromClientTimeToServerTime(long long clientTime, std::str
 }
 
 long long TimeTracker::findMedian(std::vector<long long> arr) {
+    return 0;
     long long median;
     size_t size = arr.size();
     sort(arr.begin(), arr.end());

@@ -45,9 +45,9 @@ void* startServerThread(void* input) {
 
 void* startClientThread(void* input) {
     ClientServerCommunicatorPair *clientServerCommunicatorPair = (ClientServerCommunicatorPair*) input;
-    Client client(*clientServerCommunicatorPair->clientServerCommunicator, *clientServerCommunicatorPair->clientCommunicator);
+    Client *client = new Client(*clientServerCommunicatorPair->clientServerCommunicator, *clientServerCommunicatorPair->clientCommunicator);
     while (true) {
-        client.run();
+        client->run();
     }
 }
 

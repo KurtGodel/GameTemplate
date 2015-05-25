@@ -20,45 +20,45 @@
 #include "ResourcePath.hpp"
 #include "ServerBaseClass.h"
 
-#include "StaticGameState.h"
 #include "InputTracker.h"
 #include "TimeTracker.h"
 #include "ServerPlayer.h"
 
 class ServerGame {
 public:
-    ServerGame(ServerBaseClass &serverBaseClass);
-    ~ServerGame();
-    void startGame(std::string mapName, std::vector<std::vector<std::string>>teamList);
-    void think();
-    void receivedTcpMessage(std::string message, std::string username);
-    void receivedUdpMessage(std::string message, std::string username);
+    // Ignore Me
+    ServerGame(ServerBaseClass &serverBaseClass); // constructor
+    ~ServerGame(); // deconstructor
+    
+    
+    void startGame(std::string mapName, std::vector<std::vector<std::string>>teamList); // is called at the start of a new game
+    void think(); // is called every "frame"
+    void receivedTcpMessage(std::string message, std::string username); // is called when the server receives a TCP message from a client
+    void receivedUdpMessage(std::string message, std::string username); // is called when the server receives a UDP message from a client
 private:
-    TimeTracker timeTracker;
+    std::unordered_map<std::string, ServerPlayer> players; // hashtable of usernames to player-objects
+    std::vector<std::vector<std::string>> teams; // list of teams - each team is a list of usernames
     
-    StaticGameState staticGame;
-    
-    std::string mapName = "";
-    ServerBaseClass *parentApp;
-    std::unordered_map<std::string, ServerPlayer> players;
-    std::vector<std::unordered_map<std::string, ServerPlayer>> playerHistory;
-    std::vector<long long>deltaTimeHistory;
-    std::vector<long long>timeHistory;
-    std::vector<std::vector<std::string>> teams;
-    
-    
-    std::vector<std::string> split(const std::string s, char delim);
-    std::string readFile(std::string fileName);
-    void sendTcpMessage(std::string message, std::string username);
-    void sendUdpMessage(std::string message, std::string username);
     void updateInputs(long long timeStamp, std::string message, std::string username);
-    void loadMap(std::string newMapName);
     void move(long long timeStamp, float deltaX, float deltaY, std::string username);
-    long long getTime();
     std::string createMessageForTeam(int teamNum);
     std::string applyInputsToWorld();
     void shoot(std::string username, long long timeStamp, double x, double y);
-    double magnitude(double x, double y);
+    
+    
+    
+    // premade methods & objects
+    TimeTracker timeTracker; // this object keeps track of clock-discrepencies between the client and the server
+    
+    std::vector<std::string> split(const std::string s, char delim); // splits a string; EX: split("Alice is cool.", ' ') --> ["Alice", "is", "cool"]
+    void sendTcpMessage(std::string message, std::string username); // sends a TCP message to a client (specified by username)
+    void sendUdpMessage(std::string message, std::string username); // sends a TCP message to a client (specified by username)
+    long long getTime(); // get the current time in milliseconds
+    
+    
+    
+    // ignore below this line
+    ServerBaseClass *parentApp;
 };
 
 #endif /* defined(__GameTemplate__ServerGame__) */

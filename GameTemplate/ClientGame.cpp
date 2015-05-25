@@ -8,19 +8,31 @@
 
 #include "ClientGame.h"
 
-ClientGame::ClientGame(sf::RenderWindow &w, AppBaseClass &appBaseClass) {
-    parentApp = &appBaseClass;
-    window = &w;
-}
 
-ClientGame::~ClientGame() {
-}
+// GAME-SPECIFIC METHODS
 
 void ClientGame::startGame(std::string userName) {
     myUserName = userName;
-    clearGameState();
-    sendTcpMessage("WHICH MAP");
+    sendTcpMessage("GIVE NEW GAME INFO");
 }
+
+void ClientGame::updateWorld(std::string messageFromServer, long long timeStamp) {
+    std::vector<std::string> teamStrings = split(messageFromServer, '|');
+    for(int i=0; i<teamStrings.size(); i++) {
+        std::vector<std::string> playerStrings = split(teamStrings[i], ';');
+        for(int j=0; j<playerStrings.size(); j++) {
+            std::vector<std::string> arr = split(playerStrings[j], ',');
+            if(arr.size() == 4) {
+                players[arr[0]].x = stod(arr[2]);
+                players[arr[0]].y = stod(arr[3]);
+            }
+        }
+    }
+}
+
+
+
+// NETWORK METHODS
 
 void ClientGame::receivedTcpMessage(std::string message) {
     std::vector<std::string> arr = split(message, '\n');
@@ -29,9 +41,7 @@ void ClientGame::receivedTcpMessage(std::string message) {
     }
     if(arr[0] == "START GAME" && arr.size() >= 3) {
         long long timeStamp = stoll(arr[1]);
-        std::vector<std::string> arr2 = split(arr[2], '|');
-        loadMap(arr2[0]);
-        loadPlayers(arr2[1]);
+        loadPlayers(arr[2]);
     }
     else if(arr[0] == "PING") {
         message += "\n";
@@ -47,22 +57,7 @@ void ClientGame::receivedUdpMessage(std::string message) {
     }
     if(arr[0] == "UPDATE" && arr.size() >= 3) {
         long long timeStamp = stoll(arr[1]);
-        long long lag = getTime() - timeStamp;
-        updateWorld(arr[2], lag);
-    }
-}
-
-void ClientGame::updateWorld(std::string messageFromServer, long long lag) {
-    std::vector<std::string> teamStrings = split(messageFromServer, '|');
-    for(int i=0; i<teamStrings.size(); i++) {
-        std::vector<std::string> playerStrings = split(teamStrings[i], ';');
-        for(int j=0; j<playerStrings.size(); j++) {
-            std::vector<std::string> arr = split(playerStrings[j], ',');
-            if(arr.size() == 3) {
-                players[arr[0]].x = stod(arr[1]);
-                players[arr[0]].y = stod(arr[2]);
-            }
-        }
+        updateWorld(arr[2], timeStamp);
     }
 }
 
@@ -74,30 +69,25 @@ void ClientGame::sendUdpMessage(std::string message) {
     parentApp->sendUdp(message);
 }
 
+// PER FRAME METHODS
+
 void ClientGame::think() {
     sendUdpMessage("INPUT\n" + std::to_string(getTime()) + "\n" + input.toString());
 }
 
 void ClientGame::draw() {
-    // draw static state
-    for(int i=0; i<staticGame.backgroundCircles.size(); i++) {
-        sf::CircleShape circle = sf::CircleShape(50);
-        circle.setPosition(staticGame.backgroundCircles[i]);
-        circle.setFillColor(sf::Color(100, 250, 50));
-        window->draw(circle);
-    }
-    
     // draw players
     for(int i=0; i<teams.size(); i++) {
         for(int j=0; j<teams[i].size(); j++) {
             sf::CircleShape circle = sf::CircleShape(50);
-            circle.setPosition(staticGame.backgroundCircles[i]);
             circle.setFillColor(sf::Color(255, 50, 50));
             circle.setPosition(players[teams[i][j]].x, players[teams[i][j]].y);
             window->draw(circle);
         }
     }
 }
+
+// EVENTS
 
 void ClientGame::mouseMove(sf::Event::MouseMoveEvent event) {
 }
@@ -142,17 +132,9 @@ void ClientGame::keyUp(sf::Event::KeyEvent event) {
 void ClientGame::textEntered(sf::Event::TextEvent event) {
 }
 
-void ClientGame::loadMap(std::string newMapName) {
-    mapName = newMapName;
-    std::string mapString = readFile(mapName+".txt");
-    std::vector<std::string> lineByLine = split(mapString, '\n');
-    for(int i=0; i<lineByLine.size(); i++) {
-        std::vector<std::string> csv = split(lineByLine[i], ',');
-        if(csv.size() == 2) {
-            staticGame.backgroundCircles.push_back(sf::Vector2f(stof(csv[0]), stof(csv[1])));
-        }
-    }
-}
+
+
+// IGNORE BELOW THIS POINT
 
 void ClientGame::loadPlayers(std::string teamsString) {
     players.clear();
@@ -173,20 +155,12 @@ void ClientGame::loadPlayers(std::string teamsString) {
     }
 }
 
-std::string ClientGame::readFile(std::string fileName) {
-    std::string line;
-    std::ifstream myfile (resourcePath()+fileName);
-    std::string str = "";
-    if (myfile.is_open()) {
-        while(getline(myfile,line)) {
-            str += line + "\n";
-        }
-        myfile.close();
-        return str;
-    }
-    else {
-        return "";
-    }
+ClientGame::ClientGame(sf::RenderWindow &w, AppBaseClass &appBaseClass) {
+    parentApp = &appBaseClass;
+    window = &w;
+}
+
+ClientGame::~ClientGame() {
 }
 
 std::vector<std::string> ClientGame::split(const std::string s, char delim) {
@@ -202,10 +176,7 @@ std::vector<std::string> ClientGame::split(const std::string s, char delim) {
     return elems;
 }
 
-void ClientGame::clearGameState() {
-    staticGame.backgroundCircles.clear();
-}
-
 long long ClientGame::getTime() {
     return std::chrono::duration_cast< std::chrono::milliseconds >(std::chrono::system_clock::now().time_since_epoch()).count();
 }
+

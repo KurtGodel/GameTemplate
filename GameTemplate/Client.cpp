@@ -84,12 +84,12 @@ void Client::run() {
     for(int i=0; i<server->udpMessagesFromServer.size(); i++) {
         messages.push_back(server->udpMessagesFromServer[i]);
     }
+    server->udpMessagesFromServer.clear();
     server->lock.unlock();
     app->lock.lock();
     for(int i=0; i<messages.size(); i++) {
         app->udpMessagesFromServer.push_back(messages[i]);
     }
-    server->udpMessagesFromServer.clear();
     app->lock.unlock();
     messages.clear();
     
@@ -107,49 +107,60 @@ void Client::run() {
     app->lock.unlock();
     messages.clear();
     
+    std::string message;
     // check udp messages from remote server
-    char buffer[1024];
-    char *begin = buffer;
-    char *end = begin + sizeof(buffer);
-    std::fill(begin, end, 0);
-    std::size_t received = 0;
-    sf::IpAddress sender;
-    unsigned short port;
-    udpSocket.receive(buffer, sizeof(buffer), received, sender, port);
-    std::string message(buffer);
-    if(message != "") {
-        app->lock.lock();
-        app->udpMessagesFromServer.push_back(message);
-        app->lock.unlock();
+    while(true) {
+        char buffer[1024];
+        char *begin = buffer;
+        char *end = begin + sizeof(buffer);
+        std::fill(begin, end, 0);
+        std::size_t received = 0;
+        sf::IpAddress sender;
+        unsigned short port;
+        udpSocket.receive(buffer, sizeof(buffer), received, sender, port);
+        message = std::string(buffer);
+        if(message != "") {
+            app->lock.lock();
+            app->udpMessagesFromServer.push_back(message);
+            app->lock.unlock();
+        }
+        else {
+            break;
+        }
     }
     
     
     // check tcp messages from remote server
-    sf::Packet packet;
-    tcpSocket.receive(packet);
-    message = "";
-    packet >> message;
-    if(message != "") {
-        std::vector<std::string> arr = split(message, '\n');
-        if(arr.size() == 2 && arr[0] == "Server UDP Port") {
-            // finish up connection
-            udpPortOfServer = stoi(arr[1]);
-            app->lock.lock();
-            app->tcpMessagesFromServer.push_back("DID CONNECT");
-            app->lock.unlock();
-        }
-        else if(arr.size() == 3 && arr[0] == "Username Not Unique") {
-            // finish up connection
-            udpPortOfServer = stoi(arr[1]);
-            app->lock.lock();
-            app->tcpMessagesFromServer.push_back("USERNAME NOT UNIQUE");
-            app->lock.unlock();
+    while(true) {
+        sf::Packet packet;
+        tcpSocket.receive(packet);
+        message = "";
+        packet >> message;
+        if(message != "") {
+            std::vector<std::string> arr = split(message, '\n');
+            if(arr.size() == 2 && arr[0] == "Server UDP Port") {
+                // finish up connection
+                udpPortOfServer = stoi(arr[1]);
+                app->lock.lock();
+                app->tcpMessagesFromServer.push_back("DID CONNECT");
+                app->lock.unlock();
+            }
+            else if(arr.size() == 3 && arr[0] == "Username Not Unique") {
+                // finish up connection
+                udpPortOfServer = stoi(arr[1]);
+                app->lock.lock();
+                app->tcpMessagesFromServer.push_back("USERNAME NOT UNIQUE");
+                app->lock.unlock();
+            }
+            else {
+                // pass on to app
+                app->lock.lock();
+                app->tcpMessagesFromServer.push_back(message);
+                app->lock.unlock();
+            }
         }
         else {
-            // pass on to app
-            app->lock.lock();
-            app->tcpMessagesFromServer.push_back(message);
-            app->lock.unlock();
+            break;
         }
     }
     
