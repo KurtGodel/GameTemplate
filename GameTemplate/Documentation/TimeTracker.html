@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Hello SyntaxHighlighter</title>
+	<script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+	<script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+	<link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCoreDefault.css"/>
+	<script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+
+<body style="background: white; font-family: Helvetica">
+<h1>TimeTracker</h1>
+<h3>Interface Overview</h3>
+
+<pre class="brush: js;">
+    void start(std::vector<std::string>usernames);
+    void update();
+    void receivedMesage(std::string message, std::string username);
+    long long getClientTime(std::string username);
+    long long fromClientTimeToServerTime(long long clientTime, std::string username);
+    long long getDeltaTime();
+</pre>
+
+The main purpose of TimeTracker is to account for the fact that the clock on the server might read 3:22:15 at the exact same moment the clock on the client might read 3:22:55. TimeTracker estimates this difference. The main way to interact with TimeTracker is to use getClientTime() to get an estimate for what it would getTime() would return on the client's machine. Meanwhile, fromClientTimeToServerTime() lets you convert from the timeStamp a client gave into "server-time".
+<br><br>
+Finally, getDeltaTime() gets the time since the last time think() was called in the ServerGame class.
+
+
+<h3>Implementation Overview</h3>
+About once per second, TimeTracker pings each client.
+<br>
+<b>Example:</b>
+<br>
+Image that when the server's clock reads 100,000 the client's clock reads 130,000. In other words the lient's clock is 30,000 milliseconds "ahead" of the server's clock. Now let's say that it takes 100 milliseconds for a message to go from the server to the client and vice-versa. How can we deduce both this lag and how far ahead the client's clock is?
+<br><br>
+<table border=1>
+<tr><td>Server Time</td><td>Client Time</td><td>Action</td></tr>
+<tr><td>100,000</td><td>130,000</td><td>Server sends a ping: "PING 100,000"</td>
+<tr><td>100,100</td><td>130,100</td><td>Client receives ping</td>
+<tr><td>100,100</td><td>130,100</td><td>Client sends a time-stamped ping message back "PING 130,100"</td></tr>
+<tr><td>100,200</td><td>130,200</td><td>Server receives the ping</td></tr>
+<tr><td>100,200</td><td>130,200</td><td>Server finds out roughly when the client received the first ping by average the current time with the time the original ping was sent: (100,000 + 100,200)/2 = 100,100</td></tr>
+<tr><td>100,200</td><td>130,200</td><td>Server subtracts the time stamp from this average: 130,100 - 100,100 = 300,000</td></tr>
+</table>
+<br>
+Thus, we can conclude that the client's clock 30,000 milliseconds ahead of the server's clock.
+
+TimeTracker keeps an updated history of the most recent pings and uses the median to keep this time-difference up-to-date.
+</html>
